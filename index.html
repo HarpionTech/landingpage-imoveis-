@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heloísa Silveira | Imóveis de Alto Padrão</title>
+  <meta name="description"
+    content="Imóveis exclusivos acima de R$1 milhão em Florianópolis, Jurerê, Garopaba e região. Consultoria personalizada com Heloísa Silveira.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://unpkg.com">
+  <link rel="preload" as="image" href="assets/img/elements/logo_hs_mono.png" fetchpriority="high">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.164.1/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.164.1/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="#hero" class="navbar-logo">
+        <img src="assets/img/elements/logo_hs_mono.png" alt="Heloísa Silveira" class="navbar-logo-img" fetchpriority="high" decoding="sync">
+      </a>
+      <ul class="navbar-links">
+        <li><a href="#sobre" class="nav-link">Sobre</a></li>
+        <li><a href="#imoveis" class="nav-link">Imóveis</a></li>
+        <li><a href="#regioes" class="nav-link">Regiões</a></li>
+        <li><a href="#depoimentos" class="nav-link">Depoimentos</a></li>
+      </ul>
+      <a href="https://api.whatsapp.com/send?phone=5548988710827" target="_blank" rel="noopener" class="navbar-cta">
+        Agendar Visita
+      </a>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#sobre" class="mobile-link">Sobre</a></li>
+      <li><a href="#imoveis" class="mobile-link">Imóveis</a></li>
+      <li><a href="#regioes" class="mobile-link">Regiões</a></li>
+      <li><a href="#depoimentos" class="mobile-link">Depoimentos</a></li>
+      <li><a href="https://api.whatsapp.com/send?phone=5548988710827" target="_blank" rel="noopener"
+          class="mobile-link cta">Agendar Visita</a></li>
+    </ul>
+  </div>
+
+  <!-- AMBER THREADS (full-page background) -->
+  <canvas class="amber-canvas" id="amberCanvas"></canvas>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="hero-grain"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge scroll-item scroll-fade-up">
+        <span class="badge-dot"></span>
+        Imóveis acima de R$ 1 milhão
+      </div>
+      <h1 class="hero-title scroll-item scroll-fade-up delay-100">
+        Exclusividade que<br>
+        <span class="hero-title-accent">você merece</span>
+      </h1>
+      <p class="hero-subtitle scroll-item scroll-fade-up delay-200">
+        Imóveis de altíssimo padrão em Florianópolis, Jurerê Internacional,
+        Garopaba e as localizações mais privilegiadas de Santa Catarina.
+      </p>
+      <div class="hero-actions scroll-item scroll-fade-up delay-300">
+        <a href="https://api.whatsapp.com/send?phone=5548988710827" target="_blank" rel="noopener" class="btn-primary">
+          <span>Falar com Heloísa</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </a>
+        <a href="#imoveis" class="btn-secondary">
+          Ver Imóveis
+        </a>
+      </div>
+      <div class="hero-stats scroll-item scroll-fade-up delay-400">
+        <div class="stat">
+          <span class="stat-number" data-target="150">0</span><span class="stat-plus">+</span>
+          <span class="stat-label">Imóveis vendidos</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-number" data-target="8">0</span>
+          <span class="stat-label">Anos de experiência</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-prefix">R$</span><span class="stat-number" data-target="500">0</span><span
+            class="stat-suffix">M+</span>
+          <span class="stat-label">Em VGV negociado</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll-indicator">
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section section-dark" id="sobre" style="overflow-x: hidden;">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image-col scroll-item scroll-fade-up">
+          <div class="podium-canvas-wrapper" id="podiumCanvas" style="min-height: 700px; margin-left: -700px; margin-right: -700px; width: calc(100% + 1400px);"></div>
+        </div>
+        <div class="about-content scroll-item scroll-fade-up delay-200">
+          <span class="section-tag">Sobre</span>
+          <h2 class="section-title">Heloísa <span class="text-accent">Silveira</span></h2>
+          <p class="about-role">Corretora de Imóveis | CRECI 45606-F</p>
+          <p class="about-text">
+            Especialista em imóveis de alto padrão em Florianópolis e região, com anos de experiência
+            conectando clientes exigentes às propriedades mais exclusivas de Santa Catarina.
+          </p>
+          <p class="about-text">
+            Minha abordagem é baseada em consultoria personalizada: entendo seu estilo de vida,
+            suas necessidades e seus sonhos para encontrar o imóvel perfeito — com total
+            discrição e profissionalismo.
+          </p>
+          <div class="about-credentials">
+            <div class="credential">
+              <div class="credential-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <div>
+                <strong>Confiança</strong>
+                <span>Transparência em cada negociação</span>
+              </div>
+            </div>
+            <div class="credential">
+              <div class="credential-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m9 12 2 2 4-4" />
+                </svg>
+              </div>
+              <div>
+                <strong>Exclusividade</strong>
+                <span>Acesso a imóveis fora do mercado</span>
+              </div>
+            </div>
+            <div class="credential">
+              <div class="credential-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path
+                    d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
+                </svg>
+              </div>
+              <div>
+                <strong>Dedicação</strong>
+                <span>Acompanhamento do início ao fim</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PROPERTIES -->
+  <section class="section" id="imoveis">
+    <div class="container">
+      <div class="section-header scroll-item scroll-fade-up">
+        <span class="section-tag">Portfólio Exclusivo</span>
+        <h2 class="section-title">Imóveis <span class="text-accent">Selecionados</span></h2>
+        <p class="section-desc">Cada propriedade é cuidadosamente selecionada para atender os mais exigentes padrões de
+          qualidade, localização e sofisticação.</p>
+      </div>
+      <div class="properties-grid">
+        <!-- Property 1 -->
+        <div class="property-card scroll-item scroll-fade-up">
+          <div class="property-image">
+            <div class="property-image-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="m21 15-5-5L5 21" />
+              </svg>
+            </div>
+            <div class="property-tag">Exclusivo</div>
+            <div class="property-price-tag">R$ 4.200.000</div>
+          </div>
+          <div class="property-info">
+            <h3 class="property-title">Cobertura Duplex Frente Mar</h3>
+            <p class="property-location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              Beira-Mar Norte, Florianópolis
+            </p>
+            <div class="property-features">
+              <span class="feature">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 7v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7" />
+                  <path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2" />
+                  <line x1="12" y1="11" x2="12" y2="11.01" />
+                </svg>
+                4 suítes
+              </span>
+              <span class="feature">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13" />
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                </svg>
+                4 vagas
+              </span>
+              <span class="feature">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                </svg>
+                320m²
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- Property 2 -->
+        <div class="property-card scroll-item scroll-fade-up delay-100">
+          <div class="property-image">
+            <div class="property-image-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="m21 15-5-5L5 21" />
+              </svg>
+            </div>
+            <div class="property-tag">Novo</div>
+            <div class="property-price-tag">R$ 2.800.000</div>
+          </div>
+          <div class="property-info">
+            <h3 class="property-title">Mansão com Vista Panorâmica</h3>
+            <p class="property-location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              Jurerê Internacional
+            </p>
+            <div class="property-features">
+              <span class="feature">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 7v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7" />
+                  <path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2" />
+                  <line x1="12" y1="11" x2="12" y2="11.01" />
+                </svg>
+                5 suítes
+              </span>
+              <span class="feature">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13" />
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                </svg>
+                6 vagas
+              </span>
+              <span class="feature">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                </svg>
+                480m²
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- Property 3 -->
+        <div class="property-card scroll-item scroll-fade-up delay-200">
+          <div class="property-image">
+            <div class="property-image-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="m21 15-5-5L5 21" />
+              </svg>
+            </div>
+            <div class="property-tag">Destaque</div>
+            <div class="property-price-tag">R$ 1.950.000</div>
+          </div>
+          <div class="property-info">
+            <h3 class="property-title">Apartamento Garden Luxo</h3>
+            <p class="property-location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              Cacupé, Florianópolis
+            </p>
+            <div class="property-features">
+              <span class="feature">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 7v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7" />
+                  <path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2" />
+                  <line x1="12" y1="11" x2="12" y2="11.01" />
+                </svg>
+                3 suítes
+              </span>
+              <span class="feature">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13" />
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                </svg>
+                3 vagas
+              </span>
+              <span class="feature">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                </svg>
+                210m²
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section-cta scroll-item scroll-fade-up">
+        <a href="https://api.whatsapp.com/send?phone=5548988710827" target="_blank" rel="noopener" class="btn-primary">
+          <span>Ver todos os imóveis</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGIONS -->
+  <section class="section" id="regioes">
+    <div class="container">
+      <div class="section-header scroll-item scroll-fade-up">
+        <span class="section-tag">Localizações Premium</span>
+        <h2 class="section-title">Regiões de <span class="text-accent">Atuação</span></h2>
+        <p class="section-desc">Presença nas localizações mais valorizadas e desejadas de Santa Catarina.</p>
+      </div>
+      <div class="regions-grid">
+        <div class="region-card region-card-large scroll-item scroll-fade-up" data-region="jurere">
+          <div class="region-image" style="background-image: url('assets/img/jurere.png');"></div>
+          <div class="region-overlay"></div>
+          <div class="region-content">
+            <h3 class="region-name">Jurerê Internacional</h3>
+            <p class="region-desc">O bairro mais exclusivo do sul do Brasil</p>
+            <a href="https://api.whatsapp.com/send?phone=5548988710827&text=Ol%C3%A1%20gostaria%20de%20falar%20a%20respeito%20dos%20im%C3%B3veis%20em%20Jurer%C3%AA%20Internacional"
+              target="_blank" class="region-link">Explorar imóveis →</a>
+          </div>
+        </div>
+        <div class="region-card scroll-item scroll-fade-up delay-100" data-region="beira-mar">
+          <div class="region-image" style="background-image: url('assets/img/beira-mar.png');"></div>
+          <div class="region-overlay"></div>
+          <div class="region-content">
+            <h3 class="region-name">Beira-Mar Norte</h3>
+            <p class="region-desc">Vista panorâmica da baía</p>
+            <a href="https://api.whatsapp.com/send?phone=5548988710827&text=Ol%C3%A1%20gostaria%20de%20falar%20a%20respeito%20dos%20im%C3%B3veis%20em%20Beira-Mar%20Norte"
+              target="_blank" class="region-link">Explorar imóveis →</a>
+          </div>
+        </div>
+        <div class="region-card scroll-item scroll-fade-up delay-200" data-region="cacuape">
+          <div class="region-image" style="background-image: url('assets/img/cacuape.png');"></div>
+          <div class="region-overlay"></div>
+          <div class="region-content">
+            <h3 class="region-name">Cacupé</h3>
+            <p class="region-desc">Privacidade e natureza</p>
+            <a href="https://api.whatsapp.com/send?phone=5548988710827&text=Ol%C3%A1%20gostaria%20de%20falar%20a%20respeito%20dos%20im%C3%B3veis%20em%20Cacup%C3%A9"
+              target="_blank" class="region-link">Explorar imóveis →</a>
+          </div>
+        </div>
+        <div class="region-card scroll-item scroll-fade-up delay-200" data-region="balneario-camboriu">
+          <div class="region-image" style="background-image: url('assets/img/Balneário_Camboriú.png');"></div>
+          <div class="region-overlay"></div>
+          <div class="region-content">
+            <h3 class="region-name">Balneário Camboriú</h3>
+            <p class="region-desc">Privacidade e natureza</p>
+            <a href="https://api.whatsapp.com/send?phone=5548988710827&text=Ol%C3%A1%20gostaria%20de%20falar%20a%20respeito%20dos%20im%C3%B3veis%20em%20Balne%C3%A1rio%20Cambori%C3%BA"
+              target="_blank" class="region-link">Explorar imóveis →</a>
+          </div>
+        </div>
+        <div class="region-card scroll-item scroll-fade-up delay-100" data-region="itacurubi">
+          <div class="region-image" style="background-image: url('assets/img/itacurubi.png');"></div>
+          <div class="region-overlay"></div>
+          <div class="region-content">
+            <h3 class="region-name">Itacorubi</h3>
+            <p class="region-desc">Conveniência e sofisticação</p>
+            <a href="https://api.whatsapp.com/send?phone=5548988710827&text=Ol%C3%A1%20gostaria%20de%20falar%20a%20respeito%20dos%20im%C3%B3veis%20em%20Itacorubi"
+              target="_blank" class="region-link">Explorar imóveis →</a>
+          </div>
+        </div>
+        <div class="region-card region-card-large scroll-item scroll-fade-up delay-200" data-region="garopaba">
+          <div class="region-image" style="background-image: url('assets/img/garopaba.png');"></div>
+          <div class="region-overlay"></div>
+          <div class="region-content">
+            <h3 class="region-name">Garopaba</h3>
+            <p class="region-desc">Refúgio à beira-mar com natureza preservada</p>
+            <a href="https://api.whatsapp.com/send?phone=5548988710827&text=Ol%C3%A1%20gostaria%20de%20falar%20a%20respeito%20dos%20im%C3%B3veis%20em%20Garopaba"
+              target="_blank" class="region-link">Explorar imóveis →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section section-dark" id="depoimentos">
+    <div class="container">
+      <div class="section-header scroll-item scroll-fade-up">
+        <span class="section-tag">Depoimentos</span>
+        <h2 class="section-title">O que dizem <span class="text-accent">nossos clientes</span></h2>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card scroll-item scroll-fade-up">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"A Heloísa entendeu exatamente o que eu procurava. Em menos de 30 dias, encontrou
+            a cobertura perfeita em Jurerê. Profissionalismo impecável."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">R</div>
+            <div>
+              <strong>Ricardo M.</strong>
+              <span>Empresário</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card scroll-item scroll-fade-up delay-100">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Discrição e eficiência. Compramos nossa casa na Beira-Mar com total confiança. A
+            Heloísa cuida de cada detalhe com excelência."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">A</div>
+            <div>
+              <strong>Ana & Paulo S.</strong>
+              <span>Médicos</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card scroll-item scroll-fade-up delay-200">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Investir em Florianópolis foi a melhor decisão. A assessoria da Heloísa foi
+            fundamental para encontrar as melhores oportunidades."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">M</div>
+            <div>
+              <strong>Marcos L.</strong>
+              <span>Investidor</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-card scroll-item scroll-fade-up">
+        <div class="cta-glow"></div>
+        <h2 class="cta-title">Encontre o imóvel dos seus <span class="text-accent">sonhos</span></h2>
+        <p class="cta-text">Entre em contato para uma consultoria exclusiva e personalizada. Sem compromisso.</p>
+        <div class="cta-buttons">
+          <a href="https://api.whatsapp.com/send?phone=5548988710827" target="_blank" rel="noopener"
+            class="btn-primary btn-large">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+            <span>WhatsApp</span>
+          </a>
+          <a href="mailto:heloisacsconsultoraimobiliaria@gmail.com" class="btn-secondary btn-large">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+            </svg>
+            <span>Email</span>
+          </a>
+          <a href="https://www.instagram.com/heloisasilveiraimoveis/" target="_blank" rel="noopener"
+            class="btn-secondary btn-large">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+            </svg>
+            <span>Instagram</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="assets/img/elements/logo_hs_mono.png" alt="Heloísa Silveira" loading="lazy" decoding="async">
+          </div>
+          <p class="footer-tagline">Imóveis de alto padrão em<br>Florianópolis e região.</p>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Regiões</h4>
+          <ul>
+            <li>Jurerê Internacional</li>
+            <li>Beira-Mar Norte</li>
+            <li>Cacupé</li>
+            <li>Itacorubi</li>
+            <li>Garopaba</li>
+            <li>Balneário Camboriú</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Contato</h4>
+          <ul>
+            <li><a href="https://api.whatsapp.com/send?phone=5548988710827" target="_blank" rel="noopener">WhatsApp</a>
+            </li>
+            <li><a href="mailto:heloisacsconsultoraimobiliaria@gmail.com">Email</a></li>
+            <li><a href="https://www.instagram.com/heloisasilveiraimoveis/" target="_blank" rel="noopener">Instagram</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Escritórios</h4>
+          <ul>
+            <li><a href="https://www.google.com.br/maps/place/Av.+Rio+Branco,+847" target="_blank"
+                rel="noopener">Florianópolis — Centro</a></li>
+            <li><a href="https://www.google.com.br/maps/place/Carlos+Pimenta+Alto+Padr%C3%A3o" target="_blank"
+                rel="noopener">Garopaba — Centro</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Heloísa Silveira. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- WHATSAPP FLOAT -->
+  <a href="https://api.whatsapp.com/send?phone=5548988710827" target="_blank" rel="noopener" class="whatsapp-float"
+    aria-label="WhatsApp">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+      <path
+        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+    </svg>
+  </a>
+
+  <script>
+    /* Scroll animations */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.scroll-item').forEach(el => observer.observe(el));
+
+    /* Podium 3D tilt */
+    const podiumScene = document.getElementById('podiumScene');
+    if (podiumScene) {
+      const inner = podiumScene.querySelector('.podium-inner');
+      podiumScene.addEventListener('mousemove', (e) => {
+        const r = podiumScene.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width - 0.5) * 2;
+        const y = ((e.clientY - r.top) / r.height - 0.5) * 2;
+        inner.style.transform = `rotateY(${x * 12}deg) rotateX(${-y * 7}deg)`;
+      });
+      podiumScene.addEventListener('mouseleave', () => {
+        inner.style.transform = 'rotateY(0deg) rotateX(0deg)';
+      });
+    }
+
+    /* Navbar scroll */
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      navbar.classList.toggle('navbar-scrolled', currentScroll > 80);
+    }, { passive: true });
+
+    /* Counter animation */
+    function animateCounters() {
+      document.querySelectorAll('.stat-number').forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target'));
+        const duration = 2000;
+        const start = performance.now();
+        function update(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          counter.textContent = Math.floor(eased * target);
+          if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+      });
+    }
+
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounters();
+          statsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    const statsEl = document.querySelector('.hero-stats');
+    if (statsEl) statsObserver.observe(statsEl);
+
+    /* Mobile menu */
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => {
+      menuBtn.classList.toggle('active');
+      mobileMenu.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+    });
+
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        menuBtn.classList.remove('active');
+        mobileMenu.classList.remove('open');
+        document.body.classList.remove('menu-open');
+      });
+    });
+
+    /* Amber flowing threads + varied particles */
+    (function () {
+      var canvas = document.getElementById('amberCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var w, h, threads = [], particles = [];
+      var animPaused = false;
+      var isMobile = window.innerWidth < 768;
+
+      document.addEventListener('visibilitychange', function () {
+        animPaused = document.hidden;
+      });
+
+      function resize() {
+        isMobile = window.innerWidth < 768;
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+
+      /* 45° diagonal: top-left to bottom-right */
+      var angle = Math.PI * 0.25; /* 45° = top-left → bottom-right */
+      var cosA = Math.cos(angle);
+      var sinA = Math.sin(angle);
+
+      function createThread(i, total) {
+        /* Distribute start positions along the perpendicular axis */
+        var diag = Math.sqrt(w * w + h * h);
+        var perpSpread = diag * 1.4;
+        var offset = -perpSpread * 0.2 + (perpSpread / total) * i + Math.random() * (perpSpread / total) * 0.4;
+        var sharp = Math.random();
+        return {
+          offset: offset,
+          amplitude: Math.random() * 28 + 12,
+          frequency: Math.random() * 0.008 + 0.003,
+          phase: Math.random() * Math.PI * 2,
+          speed: Math.random() * 0.45 + 0.15,
+          travel: Math.random() * 0.08 + 0.05,
+          waveShift: Math.random() * 0.7 + 0.3,
+          width: sharp > 0.5 ? Math.random() * 4.5 + 2.2 : Math.random() * 2 + 0.8,
+          opacity: sharp > 0.5 ? Math.random() * 0.45 + 0.22 : Math.random() * 0.32 + 0.20,
+          hue: Math.random() * 18 + 36,
+          sat: Math.random() * 25 + 88,
+          lightness: Math.random() * 14 + 67,
+          glowSize: sharp > 0.5 ? Math.random() * 16 + 8 : Math.random() * 32 + 18,
+          blur: sharp > 0.5 ? 0.3 : Math.random() * 10 + 5,
+          glowBlur: sharp > 0.5 ? 6 : Math.random() * 20 + 12
+        };
+      }
+
+      /* Particle types: dust, spark, orb — each with different behavior */
+      function createParticle(fromThread, startPoint, angle) {
+        var tx = startPoint ? startPoint.x : Math.random() * w;
+        var ty = startPoint ? startPoint.y : Math.random() * h;
+        var type = Math.random();
+        var pType, pSize, pOpacity, pSpeed, pGlow;
+
+        if (type < 0.3) {
+          /* Dust — tiny, dim, slow */
+          pType = 'dust';
+          pSize = Math.random() * 2 + 0.7;
+          pOpacity = Math.random() * 0.4 + 0.15;
+          pSpeed = Math.random() * 0.2 + 0.04;
+          pGlow = Math.random() * 5 + 2;
+        } else if (type < 0.7) {
+          /* Spark — small, bright, medium speed */
+          pType = 'spark';
+          pSize = Math.random() * 3.5 + 1.5;
+          pOpacity = Math.random() * 0.9 + 0.5;
+          pSpeed = Math.random() * 0.5 + 0.15;
+          pGlow = Math.random() * 16 + 8;
+        } else {
+          /* Orb — larger, soft glow, slow drift */
+          pType = 'orb';
+          pSize = Math.random() * 5.5 + 3;
+          pOpacity = Math.random() * 0.4 + 0.18;
+          pSpeed = Math.random() * 0.12 + 0.02;
+          pGlow = Math.random() * 45 + 25;
+        }
+
+        var baseAngle = angle !== undefined ? angle : (Math.random() * Math.PI * 2);
+        var speed = pSpeed * (fromThread && startPoint ? 1.6 : 1);
+        var vx = Math.cos(baseAngle) * speed;
+        var vy = Math.sin(baseAngle) * speed;
+
+        return {
+          type: pType,
+          x: tx,
+          y: ty,
+          size: pSize,
+          glowRadius: pGlow,
+          speedY: vy + (Math.random() - 0.5) * 0.04,
+          speedX: vx + (Math.random() - 0.5) * 0.04,
+          drift: Math.random() * 1.5 + 0.4,
+          driftPhase: Math.random() * Math.PI * 2,
+          opacity: pOpacity,
+          flickerSpeed: pType === 'spark' ? Math.random() * 5 + 2 : Math.random() * 1.8 + 0.6,
+          flickerPhase: Math.random() * Math.PI * 2,
+          hue: Math.random() * 18 + 36,
+          sat: Math.random() * 15 + 88,
+          lightness: pType === 'spark' ? Math.random() * 12 + 84 : Math.random() * 18 + 68,
+          life: 0,
+          maxLife: Math.random() * 1200 + 500,
+          pulseSpeed: Math.random() * 1.8 + 0.9
+        };
+      }
+
+      function emitThreadParticle(thread, time) {
+        var frac = Math.random() * 0.7 + 0.15;
+        var point = getThreadPoint(thread, frac, time);
+        var perpX = -sinA;
+        var perpY = cosA;
+        var side = Math.random() < 0.5 ? 1 : -1;
+        var angle = Math.atan2(perpY, perpX) + side * (Math.PI / 2) * 0.6 + (Math.random() - 0.5) * 0.45;
+        return createParticle(thread, point, angle);
+      }
+
+      function init() {
+        resize();
+        threads = [];
+        particles = [];
+        var threadCount = isMobile ? 12 : 25;
+        for (var i = 0; i < threadCount; i++) threads.push(createThread(i, threadCount));
+        var particleCount = isMobile ? 18 : 40;
+        for (var j = 0; j < particleCount; j++) {
+          var parentThread = threads[Math.floor(Math.random() * threads.length)];
+          particles.push(createParticle(Math.random() < 0.5 ? parentThread : null));
+        }
+      }
+
+      /* Get point along a diagonal thread */
+      function getThreadPoint(t, frac, time) {
+        var diag = Math.sqrt(w * w + h * h);
+        var len = diag * 1.5;
+        /* Start from top-left corner and flow down-right */
+        var d = frac * len - len * 0.2;
+        /* Animate whole thread position along diagonal */
+        var travel = Math.sin(time * 0.35 + t.phase) * diag * t.travel;
+        d += travel;
+        /* Base position along the 45° diagonal from top-left */
+        var cx = d * cosA;
+        var cy = d * sinA;
+        /* Offset perpendicular to the diagonal */
+        var perpX = -sinA;
+        var perpY = cosA;
+        cx += perpX * t.offset;
+        cy += perpY * t.offset;
+        /* Smooth wavy displacement perpendicular to diagonal */
+        var wave1 = Math.sin(d * t.frequency + time * t.speed + t.phase) * t.amplitude;
+        var wave2 = Math.sin(d * t.frequency * t.waveShift + time * t.speed * 0.6 + t.phase + 1.2) * t.amplitude * 0.4;
+        cx += perpX * (wave1 + wave2);
+        cy += perpY * (wave1 + wave2);
+        return { x: cx, y: cy };
+      }
+
+      function drawSmoothPath(points) {
+        if (points.length < 2) return;
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        if (points.length === 2) {
+          ctx.lineTo(points[1].x, points[1].y);
+          return;
+        }
+        for (var i = 1; i < points.length - 1; i++) {
+          var xc = (points[i].x + points[i + 1].x) * 0.5;
+          var yc = (points[i].y + points[i + 1].y) * 0.5;
+          ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+        }
+        var last = points[points.length - 1];
+        var prev = points[points.length - 2];
+        ctx.quadraticCurveTo(prev.x, prev.y, last.x, last.y);
+      }
+
+      function draw() {
+        requestAnimationFrame(draw);
+        if (animPaused) return;
+        ctx.clearRect(0, 0, w, h);
+        var time = performance.now() * 0.001;
+
+        /* Draw threads */
+        var segments = isMobile ? 18 : 30;
+        threads.forEach(function (t) {
+          var points = [];
+          for (var s = 0; s <= segments; s++) {
+            points.push(getThreadPoint(t, s / segments, time));
+          }
+
+          var maxParticles = isMobile ? 36 : 80;
+          var emitRate = isMobile ? 0.0005 : 0.001;
+          if (particles.length < maxParticles && Math.random() < emitRate) {
+            particles.push(emitThreadParticle(t, time));
+          }
+
+          /* Extra glow layer — soft & wide */
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          drawSmoothPath(points);
+          ctx.strokeStyle = 'hsla(' + t.hue + ', ' + t.sat + '%, ' + (t.lightness - 5) + '%, ' + (t.opacity * 0.15) + ')';
+          ctx.lineWidth = t.glowSize * 1.5;
+          ctx.filter = 'blur(' + (t.glowBlur * 1.2) + 'px)';
+          ctx.stroke();
+
+          /* Main glow layer */
+          drawSmoothPath(points);
+          ctx.strokeStyle = 'hsla(' + t.hue + ', ' + t.sat + '%, ' + t.lightness + '%, ' + (t.opacity * 0.35) + ')';
+          ctx.lineWidth = t.glowSize;
+          ctx.filter = 'blur(' + t.glowBlur + 'px)';
+          ctx.stroke();
+
+          /* Core line — sharp & bright */
+          drawSmoothPath(points);
+          ctx.strokeStyle = 'hsla(' + t.hue + ', ' + (t.sat + 10) + '%, ' + (t.lightness + 7) + '%, ' + Math.min(t.opacity * 1.0, 0.85) + ')';
+          ctx.lineWidth = t.width;
+          ctx.filter = 'blur(' + Math.max(t.blur - 0.3, 0) + 'px)';
+          ctx.stroke();
+
+          /* Inner bright core */
+          drawSmoothPath(points);
+          ctx.strokeStyle = 'hsla(' + t.hue + ', ' + (t.sat + 15) + '%, ' + (t.lightness + 12) + '%, ' + Math.min(t.opacity * 0.65, 0.75) + ')';
+          ctx.lineWidth = Math.max(t.width * 0.4, 0.3);
+          ctx.filter = 'none';
+          ctx.stroke();
+          ctx.filter = 'none';
+        });
+
+        /* Draw particles */
+        for (var i = particles.length - 1; i >= 0; i--) {
+          var p = particles[i];
+          p.life++;
+
+          var driftX = Math.sin(time * p.drift + p.driftPhase) * 0.8;
+          p.x += p.speedX + driftX;
+          p.y += p.speedY;
+
+          var lifeFrac = p.life / p.maxLife;
+          var fade = lifeFrac < 0.12 ? lifeFrac / 0.12 : lifeFrac > 0.8 ? (1 - lifeFrac) / 0.2 : 1;
+
+          if (p.y > h + 30 || p.y < -30 || p.x < -30 || p.x > w + 30 || p.life > p.maxLife) {
+            var parent = threads[Math.floor(Math.random() * threads.length)];
+            particles[i] = createParticle(Math.random() < 0.65 ? parent : null);
+            continue;
+          }
+
+          var flicker = p.type === 'dust'
+            ? 0.5 + 0.5 * Math.sin(time * p.flickerSpeed + p.flickerPhase)
+            : p.type === 'spark'
+              ? 0.2 + 0.8 * Math.abs(Math.sin(time * p.flickerSpeed + p.flickerPhase))
+              : 0.65 + 0.35 * Math.sin(time * p.flickerSpeed + p.flickerPhase);
+
+          var pulse = p.type === 'orb' ? 1 + 0.4 * Math.sin(time * p.pulseSpeed) : 1 + 0.15 * Math.sin(time * p.pulseSpeed * 0.6);
+          var alpha = p.opacity * flicker * fade;
+          var currentSize = p.size * pulse;
+
+          /* Glow halo */
+          var gr = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.glowRadius * pulse * 1.1);
+          gr.addColorStop(0, 'hsla(' + p.hue + ', ' + p.sat + '%, ' + p.lightness + '%, ' + (alpha * 0.6) + ')');
+          gr.addColorStop(0.3, 'hsla(' + p.hue + ', ' + p.sat + '%, ' + (p.lightness - 3) + '%, ' + (alpha * 0.3) + ')');
+          gr.addColorStop(1, 'hsla(' + p.hue + ', ' + p.sat + '%, ' + p.lightness + '%, 0)');
+          ctx.fillStyle = gr;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.glowRadius * pulse * 1.1, 0, Math.PI * 2);
+          ctx.fill();
+
+          /* Core dot */
+          ctx.fillStyle = 'hsla(' + p.hue + ', ' + (p.sat + 15) + '%, ' + (p.lightness + 18) + '%, ' + Math.min(alpha * 1.3, 1) + ')';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
+          ctx.fill();
+
+          /* Inner bright spot */
+          ctx.fillStyle = 'hsla(' + p.hue + ', ' + (p.sat + 25) + '%, ' + (p.lightness + 25) + '%, ' + Math.min(alpha * 0.7, 0.8) + ')';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, currentSize * 0.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      var resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(init, 150);
+      }, { passive: true });
+
+      init();
+      draw();
+    })();
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    THREE.Cache.enabled = true;
+
+    const container = document.getElementById('podiumCanvas');
+    if (!container) throw new Error('podiumCanvas not found');
+
+    const W = () => container.clientWidth;
+    const H = () => container.clientHeight;
+
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(42, W() / H(), 0.1, 50);
+    camera.position.set(0, -0.65, 6.4);
+    camera.lookAt(0, -0.95, 0);
+
+    /* Cap pixel ratio: 2 on HiDPI, 1 on 4K desktop monitors (dpr=1) */
+    const dpr = Math.min(window.devicePixelRatio, 2);
+    const renderer = new THREE.WebGLRenderer({ antialias: dpr < 2, alpha: true, powerPreference: 'high-performance' });
+    renderer.setSize(W(), H());
+    renderer.setPixelRatio(dpr);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    container.appendChild(renderer.domElement);
+
+    // Luzes (espelho do setup Blender)
+    scene.add(new THREE.AmbientLight(0x18130a, 1.2));
+    const key = new THREE.DirectionalLight(0xffe8b0, 4.0);
+    key.position.set(3, 5, 5); scene.add(key);
+    const rim = new THREE.DirectionalLight(0x6688ff, 2.5);
+    rim.position.set(-4, 3, -4); scene.add(rim);
+    const goldLight = new THREE.PointLight(0xd4921a, 10, 14);
+    goldLight.position.set(0, -2, 3); scene.add(goldLight);
+    const front = new THREE.DirectionalLight(0xffddb0, 1.5);
+    front.position.set(0, 1, 6); scene.add(front);
+
+    // Master group — rotaciona tudo junto com drag
+    const masterGroup = new THREE.Group();
+    scene.add(masterGroup);
+
+    // Pódio — posicionado mais baixo
+    const podiumGroup = new THREE.Group();
+    podiumGroup.position.y = -1.8;
+    masterGroup.add(podiumGroup);
+
+    let floatingCoin = null;
+
+    // Carrega o GLB exportado do Blender
+    const loader = new GLTFLoader();
+    loader.load('assets/3d/podium.glb', (gltf) => {
+      podiumGroup.add(gltf.scene);
+
+      // Moeda — interior preto, anéis dourados
+      const coinGroup = new THREE.Group();
+      coinGroup.position.set(0, 1.2, 0);
+      floatingCoin = coinGroup;
+
+      // Foto de perfil na face da moeda (MeshBasicMaterial e toneMapped: false para manter cor natural)
+      const coinFaceMat = new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false });
+      coinGroup.add(new THREE.Mesh(
+        new THREE.CircleGeometry(0.72, 64),
+        coinFaceMat
+      ));
+      new THREE.TextureLoader().load('assets/img/elements/01_foto.png', (photoTex) => {
+        photoTex.colorSpace = THREE.SRGBColorSpace;
+        
+        // Melhorar nitidez extrema
+        photoTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        photoTex.generateMipmaps = false;
+        photoTex.minFilter = THREE.LinearFilter;
+        photoTex.magFilter = THREE.LinearFilter;
+
+        // Corrigir distorção e dar um zoom para alinhar/esconder a borda interna da imagem
+        const aspect = photoTex.image.width / photoTex.image.height;
+        const zoom = 0.75; // Zoom in 25% para expandir a imagem até a borda 3D
+        if (aspect > 1) {
+          photoTex.repeat.set((1 / aspect) * zoom, zoom);
+          photoTex.offset.set((1 - (1 / aspect) * zoom) / 2, (1 - zoom) / 2);
+        } else {
+          photoTex.repeat.set(zoom, aspect * zoom);
+          photoTex.offset.set((1 - zoom) / 2, (1 - aspect * zoom) / 2);
+        }
+
+        coinFaceMat.map = photoTex;
+        coinFaceMat.needsUpdate = true;
+      });
+
+      // Anel dourado grosso (borda)
+      coinGroup.add(new THREE.Mesh(
+        new THREE.TorusGeometry(0.76, 0.07, 24, 80),
+        new THREE.MeshStandardMaterial({ color: 0xD4A21A, metalness: 1.0, roughness: 0.10 })
+      ));
+
+      // Anel fino decorativo externo
+      coinGroup.add(new THREE.Mesh(
+        new THREE.TorusGeometry(0.86, 0.02, 16, 80),
+        new THREE.MeshStandardMaterial({ color: 0xC8A96E, metalness: 1.0, roughness: 0.18 })
+      ));
+
+      masterGroup.add(coinGroup);
+
+      // Monograma HS real (logo_hs_mono.png) na frente do pódio
+      // AdditiveBlending: fundo preto = invisível, letras douradas aparecem
+      new THREE.TextureLoader().load('assets/img/elements/logo_hs_mono.png', (logoTex) => {
+        logoTex.colorSpace = THREE.SRGBColorSpace;
+        // Imagem 1536×1024 → ratio 1.5:1
+        const hsMesh = new THREE.Mesh(
+          new THREE.PlaneGeometry(1.05, 0.70),
+          new THREE.MeshBasicMaterial({
+            map: logoTex,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            transparent: true,
+          })
+        );
+        hsMesh.position.set(0, 0.04, 1.502);
+        podiumGroup.add(hsMesh);
+      });
+    }, undefined, (err) => console.error('GLB não carregou:', err));
+
+    // Interação mouse e toque com Raycaster (clicar apenas no pódio)
+    let targetRotY = 0, isDragging = false, lastMX = 0;
+    let isTouchDragging = false, lastTX = 0;
+    let normMouseX = 0, normMouseY = 0;
+    let coinFlipTarget = 0, coinFlipCurrent = 0;
+
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    function getIntersects(clientX, clientY) {
+      const r = container.getBoundingClientRect();
+      mouse.x = ((clientX - r.left) / r.width) * 2 - 1;
+      mouse.y = -((clientY - r.top) / r.height) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const objects = [...podiumGroup.children];
+      if (floatingCoin) objects.push(floatingCoin);
+      return raycaster.intersectObjects(objects, true);
+    }
+
+    container.addEventListener('mousedown', (e) => { 
+      const intersects = getIntersects(e.clientX, e.clientY);
+      if (intersects.length > 0) {
+        // Check if the clicked object is part of the coin
+        let clickedCoin = false;
+        intersects[0].object.traverseAncestors(a => { if (a === floatingCoin) clickedCoin = true; });
+        
+        if (intersects[0].object === floatingCoin || clickedCoin) {
+          coinFlipTarget += Math.PI * 2; // Trigger a full 360 flip on coin
+        } else {
+          // Trigger dragging ONLY if the podium was clicked
+          isDragging = true; 
+          lastMX = e.clientX; 
+          container.style.cursor = 'grabbing'; 
+        }
+      }
+    });
+    window.addEventListener('mouseup', () => { isDragging = false; container.style.cursor = 'default'; });
+    
+    container.addEventListener('mousemove', (e) => {
+      normMouseX = (e.clientX / window.innerWidth) * 2 - 1;
+      normMouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      if (isDragging) { 
+        targetRotY += (e.clientX - lastMX) * 0.009; 
+        lastMX = e.clientX; 
+      } else {
+        container.style.cursor = getIntersects(e.clientX, e.clientY).length > 0 ? 'grab' : 'default';
+      }
+    });
+    container.addEventListener('mouseleave', () => { isDragging = false; container.style.cursor = 'default'; });
+
+    // Touch
+    container.addEventListener('touchstart', (e) => { 
+      const intersects = getIntersects(e.touches[0].clientX, e.touches[0].clientY);
+      if (intersects.length > 0) {
+        let clickedCoin = false;
+        intersects[0].object.traverseAncestors(a => { if (a === floatingCoin) clickedCoin = true; });
+        
+        if (intersects[0].object === floatingCoin || clickedCoin) {
+          coinFlipTarget += Math.PI * 2;
+        } else {
+          isTouchDragging = true;
+          lastTX = e.touches[0].clientX; 
+        }
+      }
+    }, { passive: true });
+    container.addEventListener('touchmove', (e) => {
+      if (isTouchDragging) {
+        targetRotY += (e.touches[0].clientX - lastTX) * 0.009;
+        lastTX = e.touches[0].clientX;
+      }
+    }, { passive: true });
+    window.addEventListener('touchend', () => { isTouchDragging = false; });
+
+    // Intro Animation Setup
+    let hasAnimatedIn = false;
+    let animStartTime = 0;
+    let isContainerVisible = false;
+
+    const observer3D = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isContainerVisible = entry.isIntersecting;
+        if (entry.isIntersecting && !hasAnimatedIn) {
+          hasAnimatedIn = true;
+          animStartTime = clock.getElapsedTime();
+        }
+      });
+    }, { threshold: 0.1 });
+    observer3D.observe(container);
+
+    const easeOutCubic = x => 1 - Math.pow(1 - x, 3);
+    const easeOutBounce = x => {
+      const n1 = 7.5625, d1 = 2.75;
+      if (x < 1 / d1) return n1 * x * x;
+      else if (x < 2 / d1) return n1 * (x -= 1.5 / d1) * x + 0.75;
+      else if (x < 2.5 / d1) return n1 * (x -= 2.25 / d1) * x + 0.9375;
+      else return n1 * (x -= 2.625 / d1) * x + 0.984375;
+    };
+
+    // Loop
+    const clock = new THREE.Clock();
+    let currentMouseRotY = 0;
+    let currentMouseRotX = 0;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (!isContainerVisible && hasAnimatedIn) return;
+      const t = clock.getElapsedTime();
+
+      currentMouseRotY += (targetRotY - currentMouseRotY) * 0.06;
+
+      let introRotY = -Math.PI * 14;
+      let podiumX = -28;
+
+      if (hasAnimatedIn) {
+        const elapsed = t - animStartTime;
+
+        // Podium rolls in (0 to 1.5s)
+        if (elapsed < 1.5) {
+          const p = easeOutCubic(Math.min(elapsed / 1.5, 1));
+          podiumX = -28 * (1 - p);
+          introRotY = -Math.PI * 14 * (1 - p);
+        } else {
+          podiumX = 0;
+          introRotY = 0;
+        }
+
+        // Coin rises from inside the podium smoothly AFTER podium stops
+        if (floatingCoin) {
+          if (elapsed < 1.8) {
+            floatingCoin.position.y = -1.5;
+            floatingCoin.scale.setScalar(0.001);
+          } else if (elapsed < 4.3) {
+            const p = Math.min((elapsed - 1.8) / 2.5, 1);
+            // EaseOutQuart for a very smooth, long deceleration
+            const ease = 1 - Math.pow(1 - p, 4);
+            // Interpolate from deep y (-1.5) up to resting float position
+            const restingY = 0.0 + Math.sin(t * 1.3) * 0.12;
+            floatingCoin.position.y = -1.5 * (1 - ease) + restingY * ease;
+            floatingCoin.scale.setScalar(ease);
+          } else {
+            floatingCoin.position.y = 0.0 + Math.sin(t * 1.3) * 0.12;
+            floatingCoin.scale.setScalar(1);
+          }
+
+          // Apply Magnetic Tilt + Click Flip Rotation
+          coinFlipCurrent += (coinFlipTarget - coinFlipCurrent) * 0.08;
+          let targetCoinRotX = -normMouseY * 0.15; // Magnetic tilt
+          let targetCoinRotY = normMouseX * 0.20 + coinFlipCurrent; // Magnetic tilt + flip
+          
+          floatingCoin.rotation.x += (targetCoinRotX - floatingCoin.rotation.x) * 0.1;
+          floatingCoin.rotation.y += (targetCoinRotY - floatingCoin.rotation.y) * 0.1;
+        }
+      } else {
+        // Initial hidden state before intersection
+        if (floatingCoin) {
+          floatingCoin.position.y = 5;
+          floatingCoin.scale.setScalar(0.001);
+        }
+      }
+
+      podiumGroup.position.x = podiumX;
+      podiumGroup.rotation.y = currentMouseRotY + introRotY;
+      podiumGroup.rotation.x = 0;
+
+      camera.lookAt(0, -0.95, 0);
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    new ResizeObserver(() => {
+      if (!W() || !H()) return;
+      camera.aspect = W() / H();
+      camera.updateProjectionMatrix();
+      renderer.setSize(W(), H());
+    }).observe(container);
+  </script>
+</body>
+
+</html>
