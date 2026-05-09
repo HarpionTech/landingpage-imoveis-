@@ -1300,6 +1300,9 @@ ul {
    RESPONSIVE
    ============================================ */
 
+/* ============================================
+   TABLET — 768px até 1024px
+   ============================================ */
 @media (max-width: 1024px) {
 
   .properties-grid,
@@ -1308,7 +1311,7 @@ ul {
   }
 
   .regions-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .region-card-large {
@@ -1316,12 +1319,47 @@ ul {
   }
 
   .about-grid {
-    gap: 48px;
+    gap: 32px;
+  }
+
+  /* Podium canvas no tablet: reduz overflow lateral */
+  .podium-canvas-wrapper {
+    margin-left: -200px !important;
+    margin-right: -100px !important;
+    width: calc(100% + 300px) !important;
+    min-height: 560px !important;
+    height: 560px;
   }
 
   .footer-grid {
     grid-template-columns: 1fr 1fr;
     gap: 32px;
+  }
+
+  .about-content {
+    padding: 32px;
+  }
+}
+
+/* ============================================
+   MOBILE — até 768px
+   ============================================ */
+
+/* Remove blur da animação no mobile para nitidez máxima */
+@media (max-width: 768px) {
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .scroll-item {
+    animation-duration: 0.6s;
   }
 }
 
@@ -1341,34 +1379,75 @@ ul {
     min-height: 100svh;
   }
 
+  .hero-content {
+    max-width: 100%;
+  }
+
   .hero-title {
     font-size: clamp(2.2rem, 10vw, 3.5rem);
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+    max-width: 100%;
   }
 
   .hero-actions {
     flex-direction: column;
     width: 100%;
-    max-width: 320px;
+    max-width: 280px;
     margin-left: auto;
     margin-right: auto;
+    gap: 12px;
+    margin-bottom: 40px;
   }
 
   .btn-primary,
   .btn-secondary {
     width: 100%;
     justify-content: center;
+    padding: 14px 24px;
+    font-size: 0.95rem;
+  }
+
+  /* Botão secundário mais visível no mobile */
+  .btn-secondary {
+    border: 1.5px solid rgba(200, 169, 110, 0.5);
+    color: var(--gold-light);
+    background: rgba(200, 169, 110, 0.07);
   }
 
   .hero-stats {
-    flex-direction: column;
-    gap: 20px;
-    padding: 24px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0;
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .stat {
+    flex: 1 1 30%;
+    min-width: 90px;
+    padding: 8px 4px;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .stat-plus,
+  .stat-prefix,
+  .stat-suffix {
+    font-size: 1.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
   }
 
   .stat-divider {
-    width: 60px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+    display: none;
   }
 
   .properties-grid,
@@ -1377,22 +1456,43 @@ ul {
   }
 
   .regions-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
   }
 
   .region-card,
   .region-card-large {
-    height: 180px;
+    height: 170px;
+  }
+
+  /* Podium canvas: remove overflow no mobile */
+  .podium-canvas-wrapper {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    min-height: 380px !important;
+    height: 380px;
+    border-radius: 12px;
   }
 
   .about-grid {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 24px;
     text-align: center;
+  }
+
+  .about-content {
+    padding: 24px 20px;
+    margin-top: 0;
+    border-radius: 16px;
   }
 
   .about-content .section-title {
     text-align: center;
+  }
+
+  .about-credentials {
+    text-align: left;
   }
 
   .about-image-wrapper {
@@ -1400,38 +1500,51 @@ ul {
   }
 
   .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
     text-align: center;
   }
 
   .cta-card {
-    padding: 48px 24px;
+    padding: 48px 20px;
   }
 
   .cta-buttons {
     flex-direction: column;
     align-items: stretch;
-    max-width: 320px;
+    max-width: 280px;
     margin: 0 auto;
+    gap: 12px;
   }
 
   .btn-large {
     justify-content: center;
+    padding: 14px 28px;
   }
 
   .section-header {
     margin-bottom: 40px;
   }
+
+  .container {
+    padding: 0 16px;
+  }
 }
 
+/* ============================================
+   MOBILE PEQUENO — até 480px
+   ============================================ */
 @media (max-width: 480px) {
   .hero-title {
-    font-size: 2.2rem;
+    font-size: clamp(1.9rem, 9vw, 2.4rem);
   }
 
   .section-title {
-    font-size: 1.8rem;
+    font-size: 1.75rem;
   }
 
   .property-image {
@@ -1439,13 +1552,17 @@ ul {
   }
 
   .navbar {
-    top: 12px;
-    width: calc(100% - 24px);
+    top: 10px;
+    width: calc(100% - 20px);
   }
 
   .navbar-inner {
-    padding: 10px 16px;
+    padding: 10px 14px;
     border-radius: 12px;
+  }
+
+  .regions-grid {
+    grid-template-columns: 1fr;
   }
 
   .region-card,
@@ -1462,7 +1579,7 @@ ul {
   }
 
   .hero-subtitle {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
 
   .about-text {
@@ -1471,6 +1588,44 @@ ul {
 
   .testimonial-text {
     font-size: 0.85rem;
+  }
+
+  .podium-canvas-wrapper {
+    min-height: 300px !important;
+    height: 300px;
+  }
+
+  .hero-stats {
+    padding: 16px 12px;
+  }
+
+  .stat-number {
+    font-size: 1.8rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .about-content {
+    padding: 20px 16px;
+  }
+
+  .cta-card {
+    padding: 40px 16px;
+  }
+
+  .whatsapp-float {
+    bottom: 20px;
+    right: 16px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .whatsapp-float svg {
+    width: 24px;
+    height: 24px;
   }
 }
 
