@@ -835,9 +835,15 @@
       var vB = document.querySelector('.amber-bg-b');
       if (!vA || !vB) return;
 
-      var fadeWindow = 0.9;     // segundos da zona de crossfade
+      var fadeWindow = 2.5;     // segundos da zona de crossfade (mais longo = mais suave)
       var peakOpacity = 0.9;    // opacity max de cada video
       var started = false;
+
+      // smoothstep ease (Ken Perlin): suaviza inicio e fim
+      function smoothstep(x) {
+        x = Math.max(0, Math.min(1, x));
+        return x * x * x * (x * (x * 6 - 15) + 10);
+      }
 
       function start() {
         if (started) return;
@@ -854,7 +860,8 @@
           if (isFinite(d) && d > 0) {
             var tA = vA.currentTime;
             var distA = Math.min(tA, d - tA);
-            var aA = Math.min(1, distA / fadeWindow);
+            var raw = Math.min(1, distA / fadeWindow);
+            var aA = smoothstep(raw);
             vA.style.opacity = (aA * peakOpacity).toFixed(3);
             vB.style.opacity = ((1 - aA) * peakOpacity).toFixed(3);
           }
