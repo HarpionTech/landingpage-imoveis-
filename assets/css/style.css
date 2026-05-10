@@ -116,47 +116,17 @@ ul {
   background: transparent;
 }
 
-/* ---------- SCROLL ANIMATIONS ---------- */
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-    filter: blur(4px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
+/* ---------- SCROLL ANIMATIONS (GSAP controla, CSS apenas fallback) ---------- */
 .scroll-item {
-  animation-name: fadeInUp;
-  animation-duration: 0.9s;
-  animation-fill-mode: both;
-  animation-play-state: paused;
-  animation-timing-function: var(--ease-out);
+  will-change: transform, opacity;
 }
 
-.scroll-fade-up {
-  animation-name: fadeInUp;
-}
-
-.delay-100 {
-  animation-delay: 100ms;
-}
-
-.delay-200 {
-  animation-delay: 200ms;
-}
-
-.delay-300 {
-  animation-delay: 300ms;
-}
-
-.delay-400 {
-  animation-delay: 500ms;
+/* Fallback: se GSAP não carregar, garante visibilidade */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-item {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* ---------- TEXT UTILITIES ---------- */
@@ -1488,6 +1458,9 @@ ul {
     padding: 24px 20px;
     margin-top: 0;
     border-radius: 16px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(8, 5, 2, 0.78);
   }
 
   .about-content .section-title {
@@ -1613,6 +1586,9 @@ ul {
 
   .about-content {
     padding: 20px 16px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(8, 5, 2, 0.82);
   }
 
   .cta-card {
