@@ -399,15 +399,28 @@ ul {
   pointer-events: none;
 }
 
-/* --- Amber canvas (full-page animated threads) --- */
-.amber-canvas {
+/* --- Amber background (ambar.png) --- */
+@keyframes amberDrift {
+  0%   { transform: translate(0%,   0%)  scale(1.00); }
+  50%  { transform: translate(-3%, -3%)  scale(1.05); }
+  100% { transform: translate(0%,   0%)  scale(1.00); }
+}
+
+.amber-bg {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100svh;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
   z-index: 0;
   pointer-events: none;
+  background-image: url('../img/elements/ambar.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0.85;
+  animation: amberDrift 32s ease-in-out infinite;
+  will-change: transform;
 }
 
 
@@ -503,11 +516,7 @@ ul {
   }
 }
 
-.amber-canvas {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
+/* amber-canvas removido — agora usa .amber-bg com imagem */
 
 .hero-title {
   font-family: var(--font-display);
@@ -1887,7 +1896,7 @@ ul {
   .badge-dot,
   .scroll-line,
   .whatsapp-float,
-  .amber-canvas {
+  .amber-bg {
     animation: none !important;
   }
 }
@@ -1910,6 +1919,6 @@ ul {
   will-change: auto;
 }
 
-.amber-canvas {
-  will-change: auto;
+.amber-bg {
+  will-change: transform;
 }
