@@ -63,7 +63,7 @@
   </div>
 
   <!-- AMBER BACKGROUND -->
-  <div class="amber-bg"></div>
+  <canvas id="amberCanvas" class="amber-canvas"></canvas>
 
   <!-- HERO -->
   <section class="hero" id="hero">
@@ -566,7 +566,7 @@
   </a>
 
   <script>
-    /* canvas removido — background usa ambar.png diretamente */
+    /* ── Amber veil canvas — véu de seda em movimento ── */
     (function () {
       var canvas = document.getElementById('amberCanvas');
       if (!canvas) return;
@@ -582,11 +582,11 @@
       function mkRibbon(perpFrac, widthBase, phaseOffset) {
         return {
           pf: perpFrac, wb: widthBase, ph: phaseOffset,
-          amp1: Math.random() * 55 + 30,
-          amp2: Math.random() * 22 + 8,
-          spd1: Math.random() * 0.18 + 0.07,
-          spd2: Math.random() * 0.11 + 0.04,
-          hue:  Math.random() * 10 + 35,
+          amp1: Math.random() * 30 + 15,
+          amp2: Math.random() * 12 + 4,
+          spd1: Math.random() * 0.06 + 0.025,
+          spd2: Math.random() * 0.03 + 0.01,
+          hue:  Math.random() * 12 + 32,
         };
       }
 
@@ -598,8 +598,8 @@
         var nR = isMob ? 3 : 5;
         for (var i = 0; i < nR; i++) {
           var t  = i / (nR - 1);
-          var wb = isMob ? (55 + t * 80) : (75 + t * 125);
-          ribbons.push(mkRibbon(0.12 + t * 0.76, wb, i * 1.35));
+          var wb = isMob ? (200 + t * 260) : (280 + t * 420);
+          ribbons.push(mkRibbon(0.08 + t * 0.84, wb, i * 1.35));
         }
       }
 
