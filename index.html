@@ -586,34 +586,39 @@
       }
 
       /* ── Cria um fio com N vértices ao longo da diagonal ── */
+      /* Direção original: topo-esquerda → baixo-direita (45°)  */
+      var COS45 = Math.cos(Math.PI * 0.25);
+      var SIN45 = Math.sin(Math.PI * 0.25);
+
       function mkStrand(idx, total) {
-        var t       = idx / (total - 1);           /* 0 → 1 */
-        var nPts    = 7;
-        var bright  = Math.random() > 0.58;
-        var curl    = (Math.random() - 0.5) * 0.18; /* curvatura individual */
-        var pts     = [];
+        var t      = idx / (total - 1);
+        var nPts   = 7;
+        var bright = Math.random() > 0.58;
+        var pts    = [];
+
+        var diag   = Math.sqrt(w * w + h * h);
+        var spread = diag * 1.35;
+        /* offset perpendicular à diagonal — distribui os fios */
+        var perpOff = -spread * 0.15 + spread * t;
 
         for (var p = 0; p < nPts; p++) {
-          var prog = p / (nPts - 1);              /* 0 = raiz, 1 = ponta */
+          var prog = p / (nPts - 1);           /* 0 = raiz, 1 = ponta */
 
-          /* Posição base: varre de baixo-esquerda a cima-direita */
-          var bx = w * (-0.22 + t * 0.62 + prog * 0.88 + curl * prog);
-          var by = h * ( 1.08 - prog * 1.18 + t * 0.18 + curl * (1 - prog) * 0.4);
+          /* Avança ao longo da diagonal 45° */
+          var d  = -diag * 0.18 + prog * diag * 1.38;
+          var bx = d * COS45 - perpOff * SIN45;
+          var by = d * SIN45 + perpOff * COS45;
 
-          /* Amplitude cresce com prog³ — ponta livre como cabelo */
-          var ampScale = Math.pow(prog, 1.6) + 0.04;
+          /* Amplitude cresce com prog — ponta balança mais */
+          var ampScale = Math.pow(prog, 1.5) + 0.05;
 
           pts.push({
             bx: bx, by: by,
-            /* cada vértice tem freq e fase próprias */
-            axX: (Math.random() * 35 + 10) * ampScale,
-            axY: (Math.random() * 22 + 6)  * ampScale,
-            fxX: Math.random() * 0.22 + 0.06,
-            fxY: Math.random() * 0.18 + 0.05,
-            phX: Math.random() * Math.PI * 2,
-            phY: Math.random() * Math.PI * 2,
-            /* defasagem temporal entre vértices → ondulação orgânica */
-            lag: prog * (Math.random() * 0.6 + 0.3),
+            /* deslocamento perpendicular à diagonal = ondulação lateral */
+            amp:  (Math.random() * 32 + 10) * ampScale,
+            freq: Math.random() * 0.20 + 0.05,
+            ph:   Math.random() * Math.PI * 2,
+            lag:  prog * (Math.random() * 0.55 + 0.25),
           });
         }
 
@@ -626,7 +631,7 @@
           glowW:   bright ? Math.random() * 20 + 12   : Math.random() * 10 + 4,
           opacity: bright ? Math.random() * 0.40 + 0.26 : Math.random() * 0.18 + 0.07,
           bright:  bright,
-          spd:     Math.random() * 0.35 + 0.12,  /* velocidade global do fio */
+          spd:     Math.random() * 0.30 + 0.10,
         };
       }
 
@@ -641,10 +646,11 @@
       /* ── Resolve posição real de cada vértice no instante t ── */
       function resolvepts(s, time) {
         return s.pts.map(function (p) {
-          var t2 = time * s.spd;
+          /* Onda perpendicular à diagonal — balança como cabelo */
+          var wave = Math.sin(time * s.spd * p.freq * 6.28 + p.ph + p.lag) * p.amp;
           return {
-            x: p.bx + Math.sin(t2 * p.fxX + p.phX + p.lag) * p.axX,
-            y: p.by + Math.cos(t2 * p.fxY + p.phY + p.lag * 0.7) * p.axY,
+            x: p.bx + (-SIN45) * wave,
+            y: p.by + ( COS45) * wave,
           };
         });
       }
