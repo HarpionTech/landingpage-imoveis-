@@ -62,8 +62,8 @@
     </ul>
   </div>
 
-  <!-- AMBER THREADS (full-page background) -->
-  <canvas class="amber-canvas" id="amberCanvas"></canvas>
+  <!-- AMBER BACKGROUND -->
+  <div class="amber-bg"></div>
 
   <!-- HERO -->
   <section class="hero" id="hero">
@@ -566,11 +566,7 @@
   </a>
 
   <script>
-    /* ══════════════════════════════════════════════════════════════
-       AMBER RIBBONS — Fitas volumétricas entrelaçadas
-       Ref: ambar.png — formas largas preenchidas, globalCompositeOperation:lighter
-       cria hotspots luminosos nas sobreposições como na imagem
-    ══════════════════════════════════════════════════════════════ */
+    /* canvas removido — background usa ambar.png diretamente */
     (function () {
       var canvas = document.getElementById('amberCanvas');
       if (!canvas) return;

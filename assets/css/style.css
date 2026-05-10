@@ -399,15 +399,20 @@ ul {
   pointer-events: none;
 }
 
-/* --- Amber canvas (full-page animated threads) --- */
-.amber-canvas {
+/* --- Amber background (imagem fixa full-page) --- */
+.amber-bg {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100svh;
+  height: 100vh;
   z-index: 0;
   pointer-events: none;
+  background-image: url('../img/elements/ambar.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0.75;
 }
 
 
@@ -465,50 +470,6 @@ ul {
 }
 
 /* Amber thread animations */
-@keyframes amberGlow {
-
-  0%,
-  100% {
-    filter: drop-shadow(0 0 8px rgba(200, 169, 110, 0.4)) drop-shadow(0 0 20px rgba(209, 154, 73, 0.2));
-  }
-
-  50% {
-    filter: drop-shadow(0 0 16px rgba(200, 169, 110, 0.7)) drop-shadow(0 0 40px rgba(209, 154, 73, 0.4));
-  }
-}
-
-@keyframes amberFlow {
-  0% {
-    opacity: 0.4;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0.4;
-  }
-}
-
-@keyframes amberPulse {
-
-  0%,
-  100% {
-    transform: scaleY(1);
-  }
-
-  50% {
-    transform: scaleY(1.1);
-  }
-}
-
-.amber-canvas {
-  animation: amberGlow 3s ease-in-out infinite;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
 
 .hero-title {
   font-family: var(--font-display);
@@ -1888,7 +1849,7 @@ ul {
   .badge-dot,
   .scroll-line,
   .whatsapp-float,
-  .amber-canvas {
+  .amber-bg {
     animation: none !important;
   }
 }
@@ -1911,6 +1872,6 @@ ul {
   will-change: auto;
 }
 
-.amber-canvas {
+.amber-bg {
   will-change: auto;
 }
