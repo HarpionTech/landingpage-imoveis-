@@ -585,66 +585,68 @@
         h = canvas.height = window.innerHeight;
       }
 
-      /* Cria uma curva bezier cúbica que varre do canto
-         inferior-esquerdo ao superior-direito */
+      /* Fio de cabelo — bezier com curvatura orgânica pronunciada */
       function mkArc(i, total) {
-        /* Distribui as linhas em leque ao longo do eixo diagonal */
-        var spread = 1.1;
-        var t      = (i / (total - 1)) * spread - spread * 0.08;
+        var t = i / (total - 1);
 
-        /* Ponto de início — fora do canto inferior-esquerdo */
-        var sx = w * (t * 0.55 - 0.28);
-        var sy = h * (0.78 + t * 0.35);
+        /* Origem: espalhada ao longo da borda inferior-esquerda */
+        var sx = w * (-0.15 + t * 0.55);
+        var sy = h * (1.05 + t * 0.20);
 
-        /* Ponto de fim — fora do canto superior-direito */
-        var ex = w * (0.72 + t * 0.55);
-        var ey = h * (t * 0.38 - 0.12);
+        /* Destino: borda superior-direita */
+        var ex = w * (0.65 + t * 0.55);
+        var ey = h * (-0.08 + t * 0.25);
 
-        /* Pontos de controle que criam a curvatura elegante */
-        var cp1x = w * (0.10 + t * 0.30);
-        var cp1y = h * (0.45 + t * 0.18);
-        var cp2x = w * (0.50 + t * 0.28);
-        var cp2y = h * (0.18 + t * 0.12);
+        /* Curvatura orgânica — CP1 puxa fortemente para cima,
+           CP2 inclina para o lado, criando o "S" suave do fio */
+        var curl = (Math.random() - 0.5) * 0.35; /* variação por fio */
+        var cp1x = w * (0.05 + t * 0.20 + curl);
+        var cp1y = h * (0.55 - t * 0.15);
+        var cp2x = w * (0.38 + t * 0.28 - curl * 0.5);
+        var cp2y = h * (0.30 - t * 0.20 + curl * 0.4);
 
-        var isBright = (i % 3 === 1); /* cada 3ª linha mais brilhante */
+        var bright = Math.random() > 0.55;
         return {
           sx: sx, sy: sy, ex: ex, ey: ey,
           cp1x: cp1x, cp1y: cp1y,
           cp2x: cp2x, cp2y: cp2y,
-          /* drift — quanto os CPs oscilam com o tempo */
-          driftAmp: Math.random() * 18 + 6,
-          driftSpd: Math.random() * 0.18 + 0.06,
-          phase:    Math.random() * Math.PI * 2,
-          phase2:   Math.random() * Math.PI * 2,
+          /* oscilação viva mas suave — simula o movimento do fio */
+          driftAmp:  Math.random() * 28 + 12,
+          driftAmp2: Math.random() * 14 + 5,
+          driftSpd:  Math.random() * 0.14 + 0.04,
+          phase:     Math.random() * Math.PI * 2,
+          phase2:    Math.random() * Math.PI * 2,
+          phase3:    Math.random() * Math.PI * 2,
           /* visual */
-          hue:       Math.random() * 10 + 40,
-          sat:       Math.random() * 10 + 85,
-          light:     Math.random() * 8  + 58,
-          coreW:     isBright ? Math.random() * 1.2 + 0.9 : Math.random() * 0.8 + 0.3,
-          glowW:     isBright ? Math.random() * 22 + 14   : Math.random() * 14 + 8,
-          opacity:   isBright ? Math.random() * 0.38 + 0.28 : Math.random() * 0.22 + 0.10,
-          isBright:  isBright,
+          hue:     Math.random() * 12 + 38,
+          sat:     Math.random() * 10 + 86,
+          light:   Math.random() * 10 + 56,
+          coreW:   bright ? Math.random() * 1.0 + 0.7 : Math.random() * 0.55 + 0.2,
+          glowW:   bright ? Math.random() * 18 + 10   : Math.random() * 10 + 4,
+          opacity: bright ? Math.random() * 0.42 + 0.28 : Math.random() * 0.20 + 0.08,
+          bright:  bright,
         };
       }
 
       function init() {
         resize();
         arcs = [];
-        var count = window.innerWidth < 768 ? 5 : 8;
+        var count = window.innerWidth < 768 ? 7 : 14;
         for (var i = 0; i < count; i++) arcs.push(mkArc(i, count));
       }
 
       function drawArc(a, time) {
-        /* Oscila os pontos de controle suavemente */
+        /* Oscila CP1 e CP2 independentemente — cria curvatura viva */
         var d1 = Math.sin(time * a.driftSpd + a.phase)  * a.driftAmp;
-        var d2 = Math.sin(time * a.driftSpd * 0.7 + a.phase2) * a.driftAmp * 0.6;
+        var d2 = Math.cos(time * a.driftSpd * 0.65 + a.phase2) * a.driftAmp2;
+        var d3 = Math.sin(time * a.driftSpd * 1.2 + a.phase3) * a.driftAmp * 0.4;
 
         var cp1x = a.cp1x + d1;
         var cp1y = a.cp1y + d2;
-        var cp2x = a.cp2x - d2;
-        var cp2y = a.cp2y + d1 * 0.5;
+        var cp2x = a.cp2x + d3;
+        var cp2y = a.cp2y - d1 * 0.5;
 
-        var gc = 'hsla(' + a.hue + ',' + a.sat + '%,' + (a.light + 10) + '%,1)';
+        var gc = 'hsla(' + a.hue + ',' + a.sat + '%,' + (a.light + 12) + '%,1)';
 
         function path() {
           ctx.beginPath();
@@ -652,37 +654,38 @@
           ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, a.ex, a.ey);
         }
 
-        ctx.lineCap = 'round';
+        ctx.lineCap  = 'round';
+        ctx.lineJoin = 'round';
 
-        /* Camada 1 — Halo largo e suave */
+        /* Camada 1 — Halo difuso largo */
         path();
-        ctx.lineWidth  = a.glowW * 3.5;
-        ctx.strokeStyle = 'hsla(' + a.hue + ',' + a.sat + '%,' + a.light + '%,' + (a.opacity * 0.06) + ')';
-        ctx.shadowBlur  = a.glowW * 2.8;
+        ctx.lineWidth   = a.glowW * 4;
+        ctx.strokeStyle = 'hsla(' + a.hue + ',' + a.sat + '%,' + a.light + '%,' + (a.opacity * 0.05) + ')';
+        ctx.shadowBlur  = a.glowW * 3;
         ctx.shadowColor = gc;
         ctx.stroke();
 
-        /* Camada 2 — Brilho intermediário */
+        /* Camada 2 — Brilho médio */
         path();
-        ctx.lineWidth  = a.glowW;
-        ctx.strokeStyle = 'hsla(' + a.hue + ',' + a.sat + '%,' + a.light + '%,' + (a.opacity * 0.20) + ')';
-        ctx.shadowBlur  = a.glowW * 1.2;
+        ctx.lineWidth   = a.glowW;
+        ctx.strokeStyle = 'hsla(' + a.hue + ',' + a.sat + '%,' + a.light + '%,' + (a.opacity * 0.18) + ')';
+        ctx.shadowBlur  = a.glowW * 1.1;
         ctx.shadowColor = gc;
         ctx.stroke();
 
-        /* Camada 3 — Core nítido */
+        /* Camada 3 — Core do fio */
         path();
-        ctx.lineWidth  = a.coreW;
-        ctx.strokeStyle = 'hsla(' + a.hue + ',' + (a.sat + 6) + '%,' + Math.min(a.light + 14, 88) + '%,' + Math.min(a.opacity * 1.1, 0.85) + ')';
-        ctx.shadowBlur  = a.isBright ? 5 : 10;
+        ctx.lineWidth   = a.coreW;
+        ctx.strokeStyle = 'hsla(' + a.hue + ',' + (a.sat + 6) + '%,' + Math.min(a.light + 16, 88) + '%,' + Math.min(a.opacity * 1.15, 0.88) + ')';
+        ctx.shadowBlur  = a.bright ? 4 : 8;
         ctx.shadowColor = gc;
         ctx.stroke();
 
-        /* Camada 4 — Fio especular (só nas brilhantes) */
-        if (a.isBright) {
+        /* Camada 4 — Reflexo especular (fios brilhantes) */
+        if (a.bright) {
           path();
-          ctx.lineWidth  = Math.max(a.coreW * 0.28, 0.4);
-          ctx.strokeStyle = 'hsla(' + a.hue + ',80%,' + Math.min(a.light + 26, 93) + '%,' + Math.min(a.opacity * 0.6, 0.62) + ')';
+          ctx.lineWidth   = Math.max(a.coreW * 0.25, 0.35);
+          ctx.strokeStyle = 'hsla(' + a.hue + ',75%,' + Math.min(a.light + 28, 94) + '%,' + Math.min(a.opacity * 0.55, 0.58) + ')';
           ctx.shadowBlur  = 0;
           ctx.shadowColor = 'transparent';
           ctx.stroke();
