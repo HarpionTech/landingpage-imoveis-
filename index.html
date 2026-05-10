@@ -593,32 +593,35 @@
       function mkStrand(idx, total) {
         var t      = idx / (total - 1);
         var nPts   = 7;
-        var bright = Math.random() > 0.58;
+        var bright = Math.random() > 0.55;
         var pts    = [];
 
-        var diag   = Math.sqrt(w * w + h * h);
-        var spread = diag * 1.35;
-        /* offset perpendicular à diagonal — distribui os fios */
+        var diag    = Math.sqrt(w * w + h * h);
+        var spread  = diag * 1.35;
         var perpOff = -spread * 0.15 + spread * t;
 
         for (var p = 0; p < nPts; p++) {
-          var prog = p / (nPts - 1);           /* 0 = raiz, 1 = ponta */
+          var prog = p / (nPts - 1);
 
-          /* Avança ao longo da diagonal 45° */
           var d  = -diag * 0.18 + prog * diag * 1.38;
           var bx = d * COS45 - perpOff * SIN45;
           var by = d * SIN45 + perpOff * COS45;
 
-          /* Amplitude cresce com prog — ponta balança mais */
-          var ampScale = Math.pow(prog, 1.5) + 0.05;
+          /* Amplitude progressiva — ponta se move muito mais que a raiz */
+          var ampScale = Math.pow(prog, 1.4) + 0.06;
 
           pts.push({
             bx: bx, by: by,
-            /* deslocamento perpendicular à diagonal = ondulação lateral */
-            amp:  (Math.random() * 32 + 10) * ampScale,
-            freq: Math.random() * 0.20 + 0.05,
-            ph:   Math.random() * Math.PI * 2,
-            lag:  prog * (Math.random() * 0.55 + 0.25),
+            /* Onda primária — movimento lento e amplo */
+            amp1:  (Math.random() * 38 + 14) * ampScale,
+            freq1: Math.random() * 0.55 + 0.25,   /* Hz — ciclos/seg */
+            ph1:   Math.random() * Math.PI * 2,
+            /* Onda secundária — tremor rápido e sutil */
+            amp2:  (Math.random() * 10 + 3) * ampScale,
+            freq2: Math.random() * 1.8  + 0.9,
+            ph2:   Math.random() * Math.PI * 2,
+            /* Defasagem entre vértices — propagação de onda pelo fio */
+            lag:   prog * (Math.random() * 0.8 + 0.3),
           });
         }
 
@@ -627,11 +630,11 @@
           hue:     Math.random() * 12 + 38,
           sat:     Math.random() * 10 + 86,
           light:   Math.random() * 10 + 56,
-          coreW:   bright ? Math.random() * 1.1 + 0.7 : Math.random() * 0.55 + 0.15,
-          glowW:   bright ? Math.random() * 20 + 12   : Math.random() * 10 + 4,
-          opacity: bright ? Math.random() * 0.40 + 0.26 : Math.random() * 0.18 + 0.07,
+          coreW:   bright ? Math.random() * 1.2 + 0.7 : Math.random() * 0.6 + 0.15,
+          glowW:   bright ? Math.random() * 22 + 12   : Math.random() * 10 + 4,
+          opacity: bright ? Math.random() * 0.42 + 0.26 : Math.random() * 0.20 + 0.08,
           bright:  bright,
-          spd:     Math.random() * 0.30 + 0.10,
+          spd:     Math.random() * 0.6 + 0.25,   /* velocidade global do fio */
         };
       }
 
@@ -643,11 +646,14 @@
         for (var i = 0; i < count; i++) strands.push(mkStrand(i, count));
       }
 
-      /* ── Resolve posição real de cada vértice no instante t ── */
+      /* ── Resolve posição real de cada vértice ── */
       function resolvepts(s, time) {
+        var t = time * s.spd;
         return s.pts.map(function (p) {
-          /* Onda perpendicular à diagonal — balança como cabelo */
-          var wave = Math.sin(time * s.spd * p.freq * 6.28 + p.ph + p.lag) * p.amp;
+          /* Duas ondas sobrepostas perpendiculares à diagonal */
+          var w1   = Math.sin(t * p.freq1 * 6.283 + p.ph1 + p.lag) * p.amp1;
+          var w2   = Math.sin(t * p.freq2 * 6.283 + p.ph2 + p.lag * 0.5) * p.amp2;
+          var wave = w1 + w2;
           return {
             x: p.bx + (-SIN45) * wave,
             y: p.by + ( COS45) * wave,
@@ -718,55 +724,83 @@
         ctx.shadowBlur = 0; ctx.shadowColor = 'transparent';
       }
 
-      /* ── Poeira dourada flutuante ── */
-      function mkDust(s, pts) {
+      /* ── Sistema completo de partículas: dust · spark · orb ── */
+      function mkParticle(s, pts) {
         var pi  = Math.floor(Math.random() * pts.length);
+        var r   = Math.random();
+        var type = r < 0.30 ? 'dust' : r < 0.70 ? 'spark' : 'orb';
+        var ang  = Math.random() * Math.PI * 2;
+
+        var sizeMap = { dust: Math.random() * 1.8 + 0.4,  spark: Math.random() * 3.0 + 1.2, orb: Math.random() * 5.0 + 2.5 };
+        var opMap   = { dust: Math.random() * 0.35 + 0.10, spark: Math.random() * 0.80 + 0.45, orb: Math.random() * 0.35 + 0.15 };
+        var spMap   = { dust: Math.random() * 0.20 + 0.04, spark: Math.random() * 0.50 + 0.14, orb: Math.random() * 0.10 + 0.02 };
+        var glMap   = { dust: Math.random() * 5  + 2,      spark: Math.random() * 16 + 7,      orb: Math.random() * 40 + 20 };
+        var sp = spMap[type];
+
         return {
-          x: pts[pi].x + (Math.random() - 0.5) * 10,
-          y: pts[pi].y + (Math.random() - 0.5) * 10,
-          size: Math.random() * 1.6 + 0.3,
-          opacity: Math.random() * 0.45 + 0.12,
-          hue: s.hue + (Math.random() - 0.5) * 8,
-          life: 0, maxLife: Math.random() * 160 + 60,
-          vx: (Math.random() - 0.5) * 0.22,
-          vy: -Math.random() * 0.18 - 0.04,
-          pulse: Math.random() * 1.8 + 0.6,
+          type: type,
+          x: pts[pi].x + (Math.random() - 0.5) * 14,
+          y: pts[pi].y + (Math.random() - 0.5) * 14,
+          size: sizeMap[type], glow: glMap[type],
+          vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp - 0.06,
+          drift: Math.random() * 1.4 + 0.3,
+          driftPh: Math.random() * Math.PI * 2,
+          opacity: opMap[type],
+          fkSpeed: type === 'spark' ? Math.random() * 5 + 2 : Math.random() * 1.5 + 0.4,
+          fkPh: Math.random() * Math.PI * 2,
+          hue: s.hue + (Math.random() - 0.5) * 10,
+          sat: s.sat,
+          light: type === 'spark' ? Math.random() * 10 + 82 : Math.random() * 14 + 64,
+          life: 0,
+          maxLife: Math.random() * 900 + 300,
+          pulse: Math.random() * 1.8 + 0.7,
           ph: Math.random() * Math.PI * 2,
         };
       }
 
-      function drawDust(time) {
-        var maxD = window.innerWidth < 768 ? 18 : 38;
-        /* Emite novas partículas de fios aleatórios */
-        if (dust.length < maxD && Math.random() < 0.09) {
+      function drawParticles(time) {
+        var isMob = window.innerWidth < 768;
+        var maxP  = isMob ? 22 : 50;
+
+        if (dust.length < maxP && Math.random() < 0.10) {
           var s   = strands[Math.floor(Math.random() * strands.length)];
           var pts = resolvepts(s, time);
-          dust.push(mkDust(s, pts));
+          dust.push(mkParticle(s, pts));
         }
 
         for (var i = dust.length - 1; i >= 0; i--) {
           var p = dust[i];
           p.life++;
-          p.x += p.vx;
+          p.x += p.vx + Math.sin(time * p.drift + p.driftPh) * 0.5;
           p.y += p.vy;
-          if (p.life > p.maxLife) { dust.splice(i, 1); continue; }
+          if (p.life > p.maxLife || p.x < -40 || p.x > w + 40 || p.y < -40 || p.y > h + 40) {
+            dust.splice(i, 1); continue;
+          }
 
           var lf   = p.life / p.maxLife;
-          var fade = lf < 0.15 ? lf / 0.15 : lf > 0.72 ? (1 - lf) / 0.28 : 1;
-          var pu   = 1 + 0.28 * Math.sin(time * p.pulse + p.ph);
-          var al   = p.opacity * fade * pu;
+          var fade = lf < 0.12 ? lf / 0.12 : lf > 0.78 ? (1 - lf) / 0.22 : 1;
+          var flicker = p.type === 'spark'
+            ? 0.25 + 0.75 * Math.abs(Math.sin(time * p.fkSpeed + p.fkPh))
+            : 0.6  + 0.4  * Math.sin(time * p.fkSpeed + p.fkPh);
+          var pu   = 1 + (p.type === 'orb' ? 0.38 : 0.14) * Math.sin(time * p.pulse + p.ph);
+          var al   = p.opacity * fade * flicker;
           var sz   = p.size * pu;
-          var r    = sz * 4.5;
+          var r    = p.glow * pu;
 
           var gr = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-          gr.addColorStop(0,   'hsla(' + p.hue + ',92%,80%,' + (al * 0.72) + ')');
-          gr.addColorStop(0.4, 'hsla(' + p.hue + ',86%,65%,' + (al * 0.22) + ')');
+          gr.addColorStop(0,   'hsla(' + p.hue + ',' + p.sat + '%,' + p.light + '%,' + (al * 0.70) + ')');
+          gr.addColorStop(0.4, 'hsla(' + p.hue + ',' + p.sat + '%,' + (p.light - 5) + '%,' + (al * 0.22) + ')');
           gr.addColorStop(1,   'transparent');
           ctx.fillStyle = gr;
           ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
 
-          ctx.fillStyle = 'hsla(' + p.hue + ',96%,90%,' + Math.min(al * 1.1, 0.88) + ')';
+          ctx.fillStyle = 'hsla(' + p.hue + ',' + (p.sat + 12) + '%,' + Math.min(p.light + 22, 96) + '%,' + Math.min(al * 1.2, 1) + ')';
           ctx.beginPath(); ctx.arc(p.x, p.y, sz, 0, Math.PI * 2); ctx.fill();
+
+          if (p.type === 'spark') {
+            ctx.fillStyle = 'hsla(' + p.hue + ',90%,95%,' + Math.min(al * 0.7, 0.8) + ')';
+            ctx.beginPath(); ctx.arc(p.x, p.y, sz * 0.4, 0, Math.PI * 2); ctx.fill();
+          }
         }
       }
 
@@ -775,7 +809,7 @@
         ctx.clearRect(0, 0, w, h);
         var time = performance.now() * 0.001;
         strands.forEach(function (s) { drawStrand(s, time); });
-        drawDust(time);
+        drawParticles(time);
       }
 
       var resizeTimer;
