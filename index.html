@@ -567,217 +567,194 @@
 
   <script>
     /* ═══════════════════════════════════════════
-       AMBER CANVAS — Premium light threads
+       AMBER CANVAS — Elegant sweeping arcs
+       Estilo: linhas curvas douradas como na
+       foto de referência da Heloísa
     ═══════════════════════════════════════════ */
     (function () {
       var canvas = document.getElementById('amberCanvas');
       if (!canvas) return;
       var ctx = canvas.getContext('2d', { desynchronized: true, alpha: true });
-      var w, h, threads = [], particles = [];
+      var w, h, arcs = [];
       var paused = false;
-      var isMobile = window.innerWidth < 768;
 
       document.addEventListener('visibilitychange', function () { paused = document.hidden; });
 
-      var angle = Math.PI * 0.25;
-      var cosA = Math.cos(angle), sinA = Math.sin(angle);
-
       function resize() {
-        isMobile = window.innerWidth < 768;
-        w = canvas.width = window.innerWidth;
+        w = canvas.width  = window.innerWidth;
         h = canvas.height = window.innerHeight;
       }
 
-      function mkThread(i, total) {
-        var diag = Math.sqrt(w * w + h * h);
-        var spread = diag * 1.4;
-        var isBeam = Math.random() > 0.45;
-        return {
-          offset: -spread * 0.2 + (spread / total) * i + Math.random() * (spread / total) * 0.5,
-          amplitude: Math.random() * 22 + 8,
-          frequency: Math.random() * 0.007 + 0.002,
-          phase: Math.random() * Math.PI * 2,
-          speed: Math.random() * 0.35 + 0.1,
-          travel: Math.random() * 0.07 + 0.04,
-          waveShift: Math.random() * 0.6 + 0.3,
-          isBeam: isBeam,
-          coreW: isBeam ? Math.random() * 2.5 + 1.2 : Math.random() * 1.2 + 0.4,
-          opacity: isBeam ? Math.random() * 0.55 + 0.30 : Math.random() * 0.28 + 0.14,
-          hue: Math.random() * 14 + 38,
-          sat: Math.random() * 15 + 88,
-          light: Math.random() * 12 + 62,
-          auraW: isBeam ? Math.random() * 28 + 18 : Math.random() * 48 + 28,
-          glowBlur: isBeam ? Math.random() * 10 + 6 : Math.random() * 28 + 16,
-        };
-      }
+      /* Cria uma curva bezier cúbica que varre do canto
+         inferior-esquerdo ao superior-direito */
+      function mkArc(i, total) {
+        /* Distribui as linhas em leque ao longo do eixo diagonal */
+        var spread = 1.1;
+        var t      = (i / (total - 1)) * spread - spread * 0.08;
 
-      function mkParticle(thread, pt, ang) {
-        var tx = pt ? pt.x : Math.random() * w;
-        var ty = pt ? pt.y : Math.random() * h;
-        var r = Math.random();
-        var type = r < 0.25 ? 'dust' : r < 0.68 ? 'spark' : 'orb';
-        var sizeMap = { dust: Math.random() * 1.8 + 0.5, spark: Math.random() * 3 + 1.2, orb: Math.random() * 5 + 2.5 };
-        var opMap  = { dust: Math.random() * 0.35 + 0.1, spark: Math.random() * 0.8 + 0.45, orb: Math.random() * 0.35 + 0.15 };
-        var spMap  = { dust: Math.random() * 0.18 + 0.03, spark: Math.random() * 0.45 + 0.12, orb: Math.random() * 0.1 + 0.02 };
-        var glMap  = { dust: Math.random() * 4 + 2, spark: Math.random() * 14 + 6, orb: Math.random() * 40 + 20 };
-        var sp = spMap[type] * (pt ? 1.5 : 1);
-        var a = ang !== undefined ? ang : Math.random() * Math.PI * 2;
-        return {
-          type, x: tx, y: ty,
-          size: sizeMap[type], glow: glMap[type],
-          vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
-          drift: Math.random() * 1.4 + 0.3,
-          driftPh: Math.random() * Math.PI * 2,
-          opacity: opMap[type],
-          fkSpeed: type === 'spark' ? Math.random() * 5 + 2 : Math.random() * 1.5 + 0.5,
-          fkPh: Math.random() * Math.PI * 2,
-          hue: Math.random() * 16 + 36,
-          sat: Math.random() * 12 + 88,
-          light: type === 'spark' ? Math.random() * 10 + 82 : Math.random() * 16 + 65,
-          life: 0, maxLife: Math.random() * 1100 + 450,
-          pulse: Math.random() * 1.6 + 0.8,
-        };
-      }
+        /* Ponto de início — fora do canto inferior-esquerdo */
+        var sx = w * (t * 0.55 - 0.28);
+        var sy = h * (0.78 + t * 0.35);
 
-      function emitFromThread(t, time) {
-        var frac = Math.random() * 0.7 + 0.15;
-        var pt = getPoint(t, frac, time);
-        var a = Math.atan2(cosA, -sinA) + (Math.random() < 0.5 ? 1 : -1) * (Math.PI / 2) * 0.55 + (Math.random() - 0.5) * 0.4;
-        return mkParticle(t, pt, a);
+        /* Ponto de fim — fora do canto superior-direito */
+        var ex = w * (0.72 + t * 0.55);
+        var ey = h * (t * 0.38 - 0.12);
+
+        /* Pontos de controle que criam a curvatura elegante */
+        var cp1x = w * (0.10 + t * 0.30);
+        var cp1y = h * (0.45 + t * 0.18);
+        var cp2x = w * (0.50 + t * 0.28);
+        var cp2y = h * (0.18 + t * 0.12);
+
+        var isBright = (i % 3 === 1); /* cada 3ª linha mais brilhante */
+        return {
+          sx: sx, sy: sy, ex: ex, ey: ey,
+          cp1x: cp1x, cp1y: cp1y,
+          cp2x: cp2x, cp2y: cp2y,
+          /* drift — quanto os CPs oscilam com o tempo */
+          driftAmp: Math.random() * 18 + 6,
+          driftSpd: Math.random() * 0.18 + 0.06,
+          phase:    Math.random() * Math.PI * 2,
+          phase2:   Math.random() * Math.PI * 2,
+          /* visual */
+          hue:       Math.random() * 10 + 40,
+          sat:       Math.random() * 10 + 85,
+          light:     Math.random() * 8  + 58,
+          coreW:     isBright ? Math.random() * 1.2 + 0.9 : Math.random() * 0.8 + 0.3,
+          glowW:     isBright ? Math.random() * 22 + 14   : Math.random() * 14 + 8,
+          opacity:   isBright ? Math.random() * 0.38 + 0.28 : Math.random() * 0.22 + 0.10,
+          isBright:  isBright,
+        };
       }
 
       function init() {
         resize();
-        threads = []; particles = [];
-        var tc = isMobile ? 10 : 22;
-        for (var i = 0; i < tc; i++) threads.push(mkThread(i, tc));
-        var pc = isMobile ? 16 : 36;
-        for (var j = 0; j < pc; j++) particles.push(mkParticle(null));
+        arcs = [];
+        var count = window.innerWidth < 768 ? 5 : 8;
+        for (var i = 0; i < count; i++) arcs.push(mkArc(i, count));
       }
 
-      function getPoint(t, frac, time) {
-        var diag = Math.sqrt(w * w + h * h);
-        var len = diag * 1.5;
-        var d = frac * len - len * 0.2 + Math.sin(time * 0.3 + t.phase) * diag * t.travel;
-        var cx = d * cosA + (-sinA) * t.offset;
-        var cy = d * sinA + cosA * t.offset;
-        var w1 = Math.sin(d * t.frequency + time * t.speed + t.phase) * t.amplitude;
-        var w2 = Math.sin(d * t.frequency * t.waveShift + time * t.speed * 0.55 + t.phase + 1.3) * t.amplitude * 0.35;
-        cx += (-sinA) * (w1 + w2);
-        cy += cosA * (w1 + w2);
-        return { x: cx, y: cy };
-      }
+      function drawArc(a, time) {
+        /* Oscila os pontos de controle suavemente */
+        var d1 = Math.sin(time * a.driftSpd + a.phase)  * a.driftAmp;
+        var d2 = Math.sin(time * a.driftSpd * 0.7 + a.phase2) * a.driftAmp * 0.6;
 
-      function buildPath(points) {
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        for (var i = 1; i < points.length - 1; i++) {
-          ctx.quadraticCurveTo(points[i].x, points[i].y,
-            (points[i].x + points[i+1].x) * 0.5, (points[i].y + points[i+1].y) * 0.5);
+        var cp1x = a.cp1x + d1;
+        var cp1y = a.cp1y + d2;
+        var cp2x = a.cp2x - d2;
+        var cp2y = a.cp2y + d1 * 0.5;
+
+        var gc = 'hsla(' + a.hue + ',' + a.sat + '%,' + (a.light + 10) + '%,1)';
+
+        function path() {
+          ctx.beginPath();
+          ctx.moveTo(a.sx, a.sy);
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, a.ex, a.ey);
         }
-        var L = points.length - 1;
-        ctx.quadraticCurveTo(points[L-1].x, points[L-1].y, points[L].x, points[L].y);
-      }
 
-      function drawThreads(time) {
-        var segs = isMobile ? 16 : 28;
-        var maxP = isMobile ? 32 : 72;
         ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
 
-        threads.forEach(function (t) {
-          var pts = [];
-          for (var s = 0; s <= segs; s++) pts.push(getPoint(t, s / segs, time));
+        /* Camada 1 — Halo largo e suave */
+        path();
+        ctx.lineWidth  = a.glowW * 3.5;
+        ctx.strokeStyle = 'hsla(' + a.hue + ',' + a.sat + '%,' + a.light + '%,' + (a.opacity * 0.06) + ')';
+        ctx.shadowBlur  = a.glowW * 2.8;
+        ctx.shadowColor = gc;
+        ctx.stroke();
 
-          if (particles.length < maxP && Math.random() < (isMobile ? 0.0004 : 0.0008))
-            particles.push(emitFromThread(t, time));
+        /* Camada 2 — Brilho intermediário */
+        path();
+        ctx.lineWidth  = a.glowW;
+        ctx.strokeStyle = 'hsla(' + a.hue + ',' + a.sat + '%,' + a.light + '%,' + (a.opacity * 0.20) + ')';
+        ctx.shadowBlur  = a.glowW * 1.2;
+        ctx.shadowColor = gc;
+        ctx.stroke();
 
-          var baseC = 'hsla(' + t.hue + ',' + t.sat + '%,' + t.light + '%,';
-          var glowC  = 'hsla(' + t.hue + ',' + t.sat + '%,' + (t.light + 8) + '%,0.9)';
+        /* Camada 3 — Core nítido */
+        path();
+        ctx.lineWidth  = a.coreW;
+        ctx.strokeStyle = 'hsla(' + a.hue + ',' + (a.sat + 6) + '%,' + Math.min(a.light + 14, 88) + '%,' + Math.min(a.opacity * 1.1, 0.85) + ')';
+        ctx.shadowBlur  = a.isBright ? 5 : 10;
+        ctx.shadowColor = gc;
+        ctx.stroke();
 
-          /* 1 — Wide ambient aura */
-          buildPath(pts);
-          ctx.lineWidth = t.auraW * 2.2;
-          ctx.strokeStyle = baseC + (t.opacity * 0.06) + ')';
-          ctx.shadowBlur = t.glowBlur * 2.5;
-          ctx.shadowColor = glowC;
-          ctx.stroke();
-
-          /* 2 — Soft glow beam */
-          buildPath(pts);
-          ctx.lineWidth = t.auraW;
-          ctx.strokeStyle = baseC + (t.opacity * 0.18) + ')';
-          ctx.shadowBlur = t.glowBlur * 1.4;
-          ctx.shadowColor = glowC;
-          ctx.stroke();
-
-          /* 3 — Core line */
-          buildPath(pts);
-          ctx.lineWidth = t.coreW;
-          ctx.strokeStyle = 'hsla(' + t.hue + ',' + (t.sat + 8) + '%,' + Math.min(t.light + 10, 88) + '%,' + Math.min(t.opacity * 0.95, 0.82) + ')';
-          ctx.shadowBlur = t.isBeam ? 6 : 14;
-          ctx.shadowColor = glowC;
-          ctx.stroke();
-
-          /* 4 — Specular highlight (beam only) */
-          if (t.isBeam) {
-            buildPath(pts);
-            ctx.lineWidth = Math.max(t.coreW * 0.3, 0.5);
-            ctx.strokeStyle = 'hsla(' + t.hue + ',90%,' + Math.min(t.light + 22, 94) + '%,' + Math.min(t.opacity * 0.55, 0.6) + ')';
-            ctx.shadowBlur = 0;
-            ctx.shadowColor = 'transparent';
-            ctx.stroke();
-          }
-
-          ctx.shadowBlur = 0;
+        /* Camada 4 — Fio especular (só nas brilhantes) */
+        if (a.isBright) {
+          path();
+          ctx.lineWidth  = Math.max(a.coreW * 0.28, 0.4);
+          ctx.strokeStyle = 'hsla(' + a.hue + ',80%,' + Math.min(a.light + 26, 93) + '%,' + Math.min(a.opacity * 0.6, 0.62) + ')';
+          ctx.shadowBlur  = 0;
           ctx.shadowColor = 'transparent';
-        });
+          ctx.stroke();
+        }
+
+        ctx.shadowBlur  = 0;
+        ctx.shadowColor = 'transparent';
       }
 
-      function drawParticles(time) {
-        for (var i = particles.length - 1; i >= 0; i--) {
-          var p = particles[i];
-          p.life++;
-          p.x += p.vx + Math.sin(time * p.drift + p.driftPh) * 0.6;
-          p.y += p.vy;
-
-          if (p.life > p.maxLife || p.x < -40 || p.x > w + 40 || p.y < -40 || p.y > h + 40) {
-            particles[i] = mkParticle(null); continue;
-          }
-
-          var lf = p.life / p.maxLife;
-          var fade = lf < 0.1 ? lf / 0.1 : lf > 0.82 ? (1 - lf) / 0.18 : 1;
-          var flicker = p.type === 'spark'
-            ? 0.25 + 0.75 * Math.abs(Math.sin(time * p.fkSpeed + p.fkPh))
-            : 0.6 + 0.4 * Math.sin(time * p.fkSpeed + p.fkPh);
-          var pulse = 1 + (p.type === 'orb' ? 0.38 : 0.12) * Math.sin(time * p.pulse);
-          var alpha = p.opacity * flicker * fade;
-          var sz = p.size * pulse;
-
-          /* Glow halo */
-          var gr = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.glow * pulse);
-          gr.addColorStop(0,   'hsla(' + p.hue + ',' + p.sat + '%,' + p.light + '%,' + (alpha * 0.65) + ')');
-          gr.addColorStop(0.4, 'hsla(' + p.hue + ',' + p.sat + '%,' + (p.light - 4) + '%,' + (alpha * 0.25) + ')');
-          gr.addColorStop(1,   'hsla(' + p.hue + ',' + p.sat + '%,' + p.light + '%,0)');
-          ctx.fillStyle = gr;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.glow * pulse, 0, Math.PI * 2);
-          ctx.fill();
-
-          /* Core dot */
-          ctx.fillStyle = 'hsla(' + p.hue + ',' + (p.sat + 12) + '%,' + Math.min(p.light + 20, 96) + '%,' + Math.min(alpha * 1.2, 1) + ')';
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, sz, 0, Math.PI * 2);
-          ctx.fill();
-        }
+      /* Partículas leves — poeira dourada ao longo das curvas */
+      var dust = [];
+      function mkDust() {
+        var a = arcs[Math.floor(Math.random() * arcs.length)];
+        /* Ponto aleatório ao longo da curva */
+        var t2 = Math.random();
+        var mt = 1 - t2;
+        var x = mt*mt*mt*a.sx + 3*mt*mt*t2*a.cp1x + 3*mt*t2*t2*a.cp2x + t2*t2*t2*a.ex;
+        var y = mt*mt*mt*a.sy + 3*mt*mt*t2*a.cp1y + 3*mt*t2*t2*a.cp2y + t2*t2*t2*a.ey;
+        return {
+          x: x + (Math.random() - 0.5) * 12,
+          y: y + (Math.random() - 0.5) * 12,
+          size: Math.random() * 1.8 + 0.4,
+          opacity: Math.random() * 0.5 + 0.15,
+          hue: Math.random() * 12 + 38,
+          life: 0,
+          maxLife: Math.random() * 180 + 80,
+          vx: (Math.random() - 0.5) * 0.25,
+          vy: (Math.random() - 0.5) * 0.25,
+          pulse: Math.random() * 2 + 0.8,
+          ph: Math.random() * Math.PI * 2,
+        };
       }
 
       function draw() {
         if (paused) return;
         ctx.clearRect(0, 0, w, h);
         var time = performance.now() * 0.001;
-        drawThreads(time);
-        drawParticles(time);
+
+        /* Arcos */
+        arcs.forEach(function (a) { drawArc(a, time); });
+
+        /* Poeira */
+        var maxDust = window.innerWidth < 768 ? 20 : 40;
+        if (dust.length < maxDust && Math.random() < 0.12) dust.push(mkDust());
+
+        for (var i = dust.length - 1; i >= 0; i--) {
+          var p = dust[i];
+          p.life++;
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.life > p.maxLife) { dust.splice(i, 1); continue; }
+
+          var lf   = p.life / p.maxLife;
+          var fade = lf < 0.15 ? lf / 0.15 : lf > 0.75 ? (1 - lf) / 0.25 : 1;
+          var pu   = 1 + 0.3 * Math.sin(time * p.pulse + p.ph);
+          var al   = p.opacity * fade * pu;
+          var sz   = p.size * pu;
+
+          var gr = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, sz * 4);
+          gr.addColorStop(0,   'hsla(' + p.hue + ',90%,78%,' + (al * 0.7) + ')');
+          gr.addColorStop(0.4, 'hsla(' + p.hue + ',85%,65%,' + (al * 0.25) + ')');
+          gr.addColorStop(1,   'hsla(' + p.hue + ',80%,55%,0)');
+          ctx.fillStyle = gr;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, sz * 4, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = 'hsla(' + p.hue + ',95%,88%,' + Math.min(al * 1.1, 0.9) + ')';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, sz, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
 
       var resizeTimer;
@@ -787,8 +764,6 @@
       }, { passive: true });
 
       init();
-
-      /* RAF do canvas âmbar */
       (function loop() { draw(); requestAnimationFrame(loop); })();
     })();
 
