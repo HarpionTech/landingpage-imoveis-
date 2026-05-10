@@ -399,16 +399,15 @@ ul {
   pointer-events: none;
 }
 
-/* --- Amber WebGL shader background (confinado ao hero) --- */
-.amber-shader {
-  position: absolute;
+/* --- Amber canvas (full-page animated threads) --- */
+.amber-canvas {
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100svh;
   z-index: 0;
   pointer-events: none;
-  display: block;
 }
 
 
@@ -466,6 +465,50 @@ ul {
 }
 
 /* Amber thread animations */
+@keyframes amberGlow {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px rgba(200, 169, 110, 0.4)) drop-shadow(0 0 20px rgba(209, 154, 73, 0.2));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 16px rgba(200, 169, 110, 0.7)) drop-shadow(0 0 40px rgba(209, 154, 73, 0.4));
+  }
+}
+
+@keyframes amberFlow {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes amberPulse {
+
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  50% {
+    transform: scaleY(1.1);
+  }
+}
+
+.amber-canvas {
+  animation: amberGlow 3s ease-in-out infinite;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
 
 .hero-title {
   font-family: var(--font-display);
@@ -1844,12 +1887,9 @@ ul {
 
   .badge-dot,
   .scroll-line,
-  .whatsapp-float {
+  .whatsapp-float,
+  .amber-canvas {
     animation: none !important;
-  }
-
-  .amber-shader {
-    opacity: 0.7;
   }
 }
 
@@ -1871,6 +1911,6 @@ ul {
   will-change: auto;
 }
 
-.amber-shader {
+.amber-canvas {
   will-change: auto;
 }
