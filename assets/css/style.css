@@ -399,8 +399,8 @@ ul {
   pointer-events: none;
 }
 
-/* --- Amber background (video loop) --- */
-.amber-bg {
+/* --- Amber background (dual video crossfade loop) --- */
+.amber-bg-wrap {
   position: fixed;
   top: 0;
   left: 0;
@@ -408,9 +408,23 @@ ul {
   height: 100vh;
   z-index: 0;
   pointer-events: none;
+  overflow: hidden;
+}
+
+.amber-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  opacity: 0.9;
   display: block;
+  opacity: 0.9;
+  will-change: opacity;
+}
+
+.amber-bg-b {
+  opacity: 0;
 }
 
 

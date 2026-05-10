@@ -62,10 +62,15 @@
     </ul>
   </div>
 
-  <!-- AMBER BACKGROUND (video loop) -->
-  <video class="amber-bg" autoplay loop muted playsinline preload="auto" disablepictureinpicture>
-    <source src="assets/img/elements/hailuo-2_3_Cinematic_abstract_flowing_energy_ribbon_made_of_golden_translucent_particles_an-0.mp4" type="video/mp4">
-  </video>
+  <!-- AMBER BACKGROUND (video loop seamless crossfade) -->
+  <div class="amber-bg-wrap">
+    <video class="amber-bg amber-bg-a" autoplay loop muted playsinline preload="auto" disablepictureinpicture>
+      <source src="assets/img/elements/hailuo-2_3_Cinematic_abstract_flowing_energy_ribbon_made_of_golden_translucent_particles_an-0.mp4" type="video/mp4">
+    </video>
+    <video class="amber-bg amber-bg-b" autoplay loop muted playsinline preload="auto" disablepictureinpicture>
+      <source src="assets/img/elements/hailuo-2_3_Cinematic_abstract_flowing_energy_ribbon_made_of_golden_translucent_particles_an-0.mp4" type="video/mp4">
+    </video>
+  </div>
 
   <!-- HERO -->
   <section class="hero" id="hero">
@@ -822,6 +827,44 @@
 
       init();
       (function loop() { draw(); requestAnimationFrame(loop); })();
+    })();
+
+    /* ── Dual-video crossfade loop (sem corte) ── */
+    (function () {
+      var vA = document.querySelector('.amber-bg-a');
+      var vB = document.querySelector('.amber-bg-b');
+      if (!vA || !vB) return;
+
+      var fadeWindow = 0.9;     // segundos da zona de crossfade
+      var peakOpacity = 0.9;    // opacity max de cada video
+      var started = false;
+
+      function start() {
+        if (started) return;
+        var dur = vA.duration;
+        if (!isFinite(dur) || dur <= 0) return;
+        started = true;
+
+        try { vB.currentTime = dur / 2; } catch (e) {}
+        vA.play().catch(function(){});
+        vB.play().catch(function(){});
+
+        function tick() {
+          var d = vA.duration;
+          if (isFinite(d) && d > 0) {
+            var tA = vA.currentTime;
+            var distA = Math.min(tA, d - tA);
+            var aA = Math.min(1, distA / fadeWindow);
+            vA.style.opacity = (aA * peakOpacity).toFixed(3);
+            vB.style.opacity = ((1 - aA) * peakOpacity).toFixed(3);
+          }
+          requestAnimationFrame(tick);
+        }
+        tick();
+      }
+
+      if (vA.readyState >= 1) start();
+      else vA.addEventListener('loadedmetadata', start);
     })();
 
     /* ══════════════════════════════════════════════════════════════
