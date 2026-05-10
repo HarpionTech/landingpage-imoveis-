@@ -788,52 +788,144 @@
       (function loop() { draw(); requestAnimationFrame(loop); })();
     })();
 
-    /* ═══════════════════════════════════════════
-       GSAP — ScrollTrigger animations
-    ═══════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════════════════
+       GSAP — Hero cinematic + Scroll premium + Magnetic UI
+       Refs: Mojito Awwwards scroll, Spacexpirate magnetic buttons
+    ══════════════════════════════════════════════════════════════ */
     gsap.registerPlugin(ScrollTrigger);
 
-    /* Oculta itens antes de animar (GSAP assume o controle) */
+    /* ── Hero entrance sequence (Mojito-style stagger) ── */
     gsap.set('.scroll-item', { opacity: 0, y: 28 });
 
+    var heroTl = gsap.timeline({ delay: 0.2, defaults: { ease: 'power3.out' } });
+    heroTl
+      .fromTo('.hero-badge',
+        { opacity: 0, y: 22, scale: 0.9 },
+        { opacity: 1, y: 0,  scale: 1,   duration: 0.75 })
+      .fromTo('.hero-title',
+        { opacity: 0, y: 60 },
+        { opacity: 1, y: 0,              duration: 1.05 }, '-=0.38')
+      .fromTo('.hero-subtitle',
+        { opacity: 0, y: 32 },
+        { opacity: 1, y: 0,              duration: 0.85 }, '-=0.68')
+      .fromTo('.hero-actions',
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0,              duration: 0.75 }, '-=0.55')
+      .fromTo('.hero-stats',
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0,              duration: 0.75 }, '-=0.50')
+      .fromTo('.hero-scroll-indicator',
+        { opacity: 0 },
+        { opacity: 1,                    duration: 0.8  }, '-=0.30');
+
+    /* ── Hero parallax depth (Mojito technique) ── */
+    gsap.to('.hero-content', {
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.5 },
+      y: -90, ease: 'none',
+    });
+
+    /* ── Generic scroll items (non-hero, non-card) ── */
     var delayMap = { 'delay-100': 0.10, 'delay-200': 0.20, 'delay-300': 0.32, 'delay-400': 0.50 };
     document.querySelectorAll('.scroll-item').forEach(function (el) {
+      if (el.closest('.hero')) return;
+      if (el.classList.contains('property-card'))   return;
+      if (el.classList.contains('region-card'))     return;
+      if (el.classList.contains('testimonial-card')) return;
       var delay = 0;
-      Object.keys(delayMap).forEach(function (cls) { if (el.classList.contains(cls)) delay = delayMap[cls]; });
+      Object.keys(delayMap).forEach(function (k) { if (el.classList.contains(k)) delay = delayMap[k]; });
       gsap.to(el, {
         scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' },
         opacity: 1, y: 0,
-        duration: 0.78, delay: delay,
-        ease: 'power2.out',
-        clearProps: 'transform',
+        duration: 0.80, delay: delay,
+        ease: 'power2.out', clearProps: 'transform',
       });
     });
 
-    /* Counter animation com GSAP */
-    var statsEl = document.querySelector('.hero-stats');
-    if (statsEl) {
-      ScrollTrigger.create({
-        trigger: statsEl, start: 'top 80%', once: true,
-        onEnter: function () {
-          document.querySelectorAll('.stat-number').forEach(function (el) {
-            var target = parseInt(el.getAttribute('data-target'));
-            var obj = { val: 0 };
-            gsap.to(obj, {
-              val: target, duration: 2.2, ease: 'power2.out',
-              onUpdate: function () { el.textContent = Math.floor(obj.val); },
-            });
-          });
-        },
-      });
-    }
+    /* ── Property cards — spring bounce ── */
+    gsap.utils.toArray('.property-card').forEach(function (card, i) {
+      gsap.fromTo(card,
+        { opacity: 0, y: 55, scale: 0.95 },
+        { scrollTrigger: { trigger: card, start: 'top 90%', toggleActions: 'play none none none' },
+          opacity: 1, y: 0, scale: 1,
+          duration: 0.80, delay: i * 0.13,
+          ease: 'back.out(1.5)', clearProps: 'transform' });
+    });
 
-    /* Navbar */
+    /* ── Region cards — scale stagger ── */
+    gsap.utils.toArray('.region-card').forEach(function (card, i) {
+      gsap.fromTo(card,
+        { opacity: 0, y: 40, scale: 0.93 },
+        { scrollTrigger: { trigger: card, start: 'top 92%', toggleActions: 'play none none none' },
+          opacity: 1, y: 0, scale: 1,
+          duration: 0.68, delay: i * 0.07,
+          ease: 'power2.out', clearProps: 'transform' });
+    });
+
+    /* ── Testimonials — subtle rotateX ── */
+    gsap.utils.toArray('.testimonial-card').forEach(function (card, i) {
+      gsap.fromTo(card,
+        { opacity: 0, y: 38, rotateX: 8 },
+        { scrollTrigger: { trigger: card, start: 'top 90%', toggleActions: 'play none none none' },
+          opacity: 1, y: 0, rotateX: 0,
+          duration: 0.78, delay: i * 0.13,
+          ease: 'power2.out', clearProps: 'transform' });
+    });
+
+    /* ── Credentials — slide from left ── */
+    gsap.utils.toArray('.credential').forEach(function (cred, i) {
+      gsap.fromTo(cred,
+        { opacity: 0, x: -32 },
+        { scrollTrigger: { trigger: cred, start: 'top 88%', toggleActions: 'play none none none' },
+          opacity: 1, x: 0,
+          duration: 0.68, delay: i * 0.15,
+          ease: 'power2.out' });
+    });
+
+    /* ── CTA glow reveal ── */
+    ScrollTrigger.create({
+      trigger: '.cta-card', start: 'top 78%', once: true,
+      onEnter: function () {
+        gsap.fromTo('.cta-glow',
+          { scale: 0.5, opacity: 0 },
+          { scale: 1, opacity: 0.3, duration: 1.6, ease: 'power2.out' });
+      },
+    });
+
+    /* ── Counter animation ── */
+    ScrollTrigger.create({
+      trigger: '.hero-stats', start: 'top 80%', once: true,
+      onEnter: function () {
+        document.querySelectorAll('.stat-number').forEach(function (el) {
+          var target = parseInt(el.getAttribute('data-target'));
+          var obj = { val: 0 };
+          gsap.to(obj, {
+            val: target, duration: 2.2, ease: 'power2.out',
+            onUpdate: function () { el.textContent = Math.floor(obj.val); },
+          });
+        });
+      },
+    });
+
+    /* ── Magnetic buttons (Spacexpirate technique) ── */
+    document.querySelectorAll('.btn-primary, .navbar-cta').forEach(function (btn) {
+      btn.addEventListener('mousemove', function (e) {
+        var r = btn.getBoundingClientRect();
+        var x = (e.clientX - r.left  - r.width  / 2) * 0.30;
+        var y = (e.clientY - r.top   - r.height / 2) * 0.30;
+        gsap.to(btn, { x: x, y: y, duration: 0.25, ease: 'power2.out', overwrite: true });
+      });
+      btn.addEventListener('mouseleave', function () {
+        gsap.to(btn, { x: 0, y: 0, duration: 0.65, ease: 'elastic.out(1, 0.5)', overwrite: true });
+      });
+    });
+
+    /* ── Navbar ── */
     var navbar = document.getElementById('navbar');
     window.addEventListener('scroll', function () {
       navbar.classList.toggle('navbar-scrolled', window.pageYOffset > 80);
     }, { passive: true });
 
-    /* Mobile menu */
+    /* ── Mobile menu ── */
     var menuBtn = document.getElementById('mobileMenuBtn');
     var mobileMenu = document.getElementById('mobileMenu');
     menuBtn.addEventListener('click', function () {

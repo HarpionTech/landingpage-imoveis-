@@ -116,12 +116,24 @@ ul {
   background: transparent;
 }
 
-/* ---------- SCROLL ANIMATIONS (GSAP controla, CSS apenas fallback) ---------- */
+/* ---------- SCROLL ANIMATIONS (GSAP controla) ---------- */
 .scroll-item {
   will-change: transform, opacity;
 }
 
-/* Fallback: se GSAP não carregar, garante visibilidade */
+/* Magnetic button: não deixa o transform do GSAP conflitar com hover */
+.btn-primary,
+.btn-secondary,
+.navbar-cta {
+  transform-origin: center center;
+}
+
+/* Testimonials: perspective para rotateX funcionar */
+.testimonials-grid {
+  perspective: 1000px;
+}
+
+/* Fallback visibilidade se GSAP não carregar */
 @media (prefers-reduced-motion: reduce) {
   .scroll-item {
     opacity: 1 !important;
