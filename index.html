@@ -62,12 +62,10 @@
     </ul>
   </div>
 
-  <!-- AMBER BACKGROUND (GLSL shader) -->
-  <canvas id="amberShader" class="amber-shader"></canvas>
-
   <!-- HERO -->
   <section class="hero" id="hero">
     <div class="hero-bg">
+      <canvas id="amberShader" class="amber-shader"></canvas>
       <div class="hero-grain"></div>
     </div>
     <div class="hero-content">
@@ -924,6 +922,10 @@
     const canvas = document.getElementById('amberShader');
     if (canvas) {
       const isMobile = window.innerWidth < 768;
+      const host = canvas.parentElement; // .hero-bg
+
+      const W = () => host.clientWidth  || window.innerWidth;
+      const H = () => host.clientHeight || window.innerHeight;
 
       const renderer = new THREE.WebGLRenderer({
         canvas,
@@ -931,7 +933,7 @@
         alpha: false,
         powerPreference: 'high-performance'
       });
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(W(), H());
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 1.5));
 
       const scene = new THREE.Scene();
@@ -940,8 +942,8 @@
       const uniforms = {
         uTime:       { value: 0 },
         uResolution: { value: new THREE.Vector2(
-          window.innerWidth  * renderer.getPixelRatio(),
-          window.innerHeight * renderer.getPixelRatio()
+          W() * renderer.getPixelRatio(),
+          H() * renderer.getPixelRatio()
         )},
         uMouse:      { value: new THREE.Vector2(0, 0) }
       };
@@ -1049,10 +1051,11 @@
       scene.add(mesh);
 
       const mouseTarget = new THREE.Vector2(0, 0);
-      window.addEventListener('mousemove', (e) => {
+      host.addEventListener('mousemove', (e) => {
+        const r = host.getBoundingClientRect();
         mouseTarget.set(
-          (e.clientX / window.innerWidth)  * 2 - 1,
-          -(e.clientY / window.innerHeight) * 2 + 1
+          ((e.clientX - r.left) / r.width)  * 2 - 1,
+          -((e.clientY - r.top) / r.height) * 2 + 1
         );
       }, { passive: true });
 
@@ -1060,10 +1063,10 @@
       window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setSize(W(), H());
           uniforms.uResolution.value.set(
-            window.innerWidth  * renderer.getPixelRatio(),
-            window.innerHeight * renderer.getPixelRatio()
+            W() * renderer.getPixelRatio(),
+            H() * renderer.getPixelRatio()
           );
         }, 150);
       }, { passive: true });
