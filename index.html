@@ -651,11 +651,21 @@
       var ctx = canvas.getContext('2d');
       var w, h, threads = [], particles = [];
       var animPaused = false;
+      var isScrolling = false;
+      var scrollTimer;
       var isMobile = window.innerWidth < 768;
 
       document.addEventListener('visibilitychange', function () {
         animPaused = document.hidden;
       });
+
+      window.addEventListener('scroll', function () {
+        isScrolling = true;
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(function () {
+          isScrolling = false;
+        }, 120);
+      }, { passive: true });
 
       function resize() {
         isMobile = window.innerWidth < 768;
@@ -818,7 +828,7 @@
 
       function draw() {
         requestAnimationFrame(draw);
-        if (animPaused) return;
+        if (animPaused || isScrolling) return;
         ctx.clearRect(0, 0, w, h);
         var time = performance.now() * 0.001;
 

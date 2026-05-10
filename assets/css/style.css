@@ -523,6 +523,9 @@ ul {
 
 .amber-canvas {
   animation: amberGlow 3s ease-in-out infinite;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .hero-title {
