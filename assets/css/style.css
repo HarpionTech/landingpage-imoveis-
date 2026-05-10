@@ -399,29 +399,63 @@ ul {
   pointer-events: none;
 }
 
-/* --- Amber background — véu de luz diagonal --- */
-@keyframes amberDrift {
-  0%   { transform: translate(0%,   0%)  scale(1.00); }
-  33%  { transform: translate(-3%, -2%)  scale(1.03); }
-  66%  { transform: translate(-5%, -5%)  scale(1.06); }
-  100% { transform: translate(0%,   0%)  scale(1.00); }
+/* --- Amber background — véu de luz diagonal multi-layer --- */
+@keyframes amberRibbon {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%  { transform: translate3d(-3%, -2%, 0) rotate(0.8deg); }
+  100% { transform: translate3d(2%, -4%, 0) rotate(-0.5deg); }
+}
+
+@keyframes amberGlow {
+  0%   { opacity: 0.55; transform: scale(1) translate3d(0, 0, 0); }
+  50%  { opacity: 0.85; transform: scale(1.06) translate3d(-2%, 1%, 0); }
+  100% { opacity: 0.65; transform: scale(1.12) translate3d(3%, -2%, 0); }
 }
 
 .amber-bg {
   position: fixed;
-  top: -15%;
-  left: -15%;
-  width: 130%;
-  height: 130%;
+  inset: 0;
   z-index: 0;
   pointer-events: none;
+  overflow: hidden;
   background:
-    radial-gradient(ellipse 200% 90% at -15%  5%, rgba(210, 105, 12, 0.70) 0%, transparent 52%),
-    radial-gradient(ellipse 180% 80% at  25% 30%, rgba(240, 155, 35, 0.45) 0%, transparent 50%),
-    radial-gradient(ellipse 160% 70% at  60% 55%, rgba(200,  85, 10, 0.40) 0%, transparent 48%),
-    radial-gradient(ellipse 190% 85% at 110% 90%, rgba(220, 120, 20, 0.65) 0%, transparent 52%);
-  animation: amberDrift 28s ease-in-out infinite alternate;
+    radial-gradient(ellipse at 50% 50%, #1a0a02 0%, #08030a 70%, #050204 100%);
+}
+
+.amber-bg::before {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  background:
+    linear-gradient(135deg,
+      transparent 15%,
+      rgba(180,  70,  10, 0.30) 25%,
+      rgba(230, 140,  35, 0.55) 35%,
+      rgba(255, 185,  60, 0.45) 42%,
+      rgba(230, 140,  35, 0.55) 48%,
+      rgba(180,  70,  10, 0.30) 58%,
+      transparent 68%),
+    linear-gradient(135deg,
+      transparent 55%,
+      rgba(160,  60,   8, 0.28) 65%,
+      rgba(215, 120,  28, 0.50) 75%,
+      rgba(160,  60,   8, 0.28) 85%,
+      transparent 95%);
+  animation: amberRibbon 38s ease-in-out infinite alternate;
   will-change: transform;
+}
+
+.amber-bg::after {
+  content: '';
+  position: absolute;
+  inset: -15%;
+  background:
+    radial-gradient(ellipse 70% 45% at 22% 28%, rgba(255, 195, 70, 0.45) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 78% 72%, rgba(205,  90, 18, 0.50) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 35% at 58% 50%, rgba(245, 170, 50, 0.30) 0%, transparent 60%);
+  mix-blend-mode: screen;
+  animation: amberGlow 26s ease-in-out infinite alternate;
+  will-change: transform, opacity;
 }
 
 
