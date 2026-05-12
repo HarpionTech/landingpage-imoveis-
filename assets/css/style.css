@@ -1605,9 +1605,9 @@ html.lenis body {
     border-radius: 16px;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background-color: rgba(8, 5, 2, 0.55);
+    background-color: #1a1208;
     background-image:
-      linear-gradient(135deg, rgba(8, 5, 2, 0.45), rgba(15, 10, 4, 0.30)),
+      linear-gradient(135deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.06)),
       url('../img/marmore_card_sobre.png');
     background-size: cover, cover;
     background-position: center, center;
@@ -1739,9 +1739,9 @@ html.lenis body {
     padding: 20px 16px;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background-color: rgba(8, 5, 2, 0.55);
+    background-color: #1a1208;
     background-image:
-      linear-gradient(135deg, rgba(8, 5, 2, 0.50), rgba(15, 10, 4, 0.32)),
+      linear-gradient(135deg, rgba(0, 0, 0, 0.24), rgba(0, 0, 0, 0.08)),
       url('../img/marmore_card_sobre.png');
     background-size: cover, cover;
     background-position: center, center;
