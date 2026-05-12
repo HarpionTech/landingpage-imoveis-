@@ -395,7 +395,9 @@ ul {
   content: '';
   position: absolute;
   inset: 0;
-  background: none;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 45%, rgba(212, 154, 60, 0.22) 0%, rgba(180, 120, 40, 0.10) 35%, rgba(0, 0, 0, 0) 70%),
+    radial-gradient(ellipse 120% 80% at 50% 100%, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 60%);
   pointer-events: none;
 }
 

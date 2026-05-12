@@ -605,9 +605,9 @@
       // 3 ribbons — cada banda tem centro vertical, fase e frequência próprios
       // mobile usa amplitudes/posicoes ajustadas para nao ficar espalhado demais
       var BANDS = isMobile ? [
-        { cy: 0.50, phase: 0.00, freq: 2.20, amp: 0.14, t1: 0.35, t2: 0.27 },
-        { cy: 0.36, phase: 1.30, freq: 2.55, amp: 0.10, t1: 0.42, t2: 0.31 },
-        { cy: 0.64, phase: 2.40, freq: 1.95, amp: 0.12, t1: 0.30, t2: 0.23 }
+        { cy: 0.50, phase: 0.00, freq: 1.80, amp: 0.22, t1: 0.35, t2: 0.27 },
+        { cy: 0.22, phase: 1.30, freq: 2.20, amp: 0.16, t1: 0.42, t2: 0.31 },
+        { cy: 0.78, phase: 2.40, freq: 1.55, amp: 0.18, t1: 0.30, t2: 0.23 }
       ] : [
         { cy: 0.50, phase: 0.00, freq: 2.40, amp: 0.20, t1: 0.35, t2: 0.27 },
         { cy: 0.30, phase: 1.30, freq: 2.85, amp: 0.15, t1: 0.42, t2: 0.31 },
@@ -691,7 +691,7 @@
           ctx.fillRect(op.x - o.radius, op.y - o.radius, o.radius * 2, o.radius * 2);
         }
 
-        var ribbonHalf = isMobile ? Math.min(h * 0.12, 90) : Math.min(h * 0.18, 140);
+        var ribbonHalf = isMobile ? Math.min(h * 0.16, 110) : Math.min(h * 0.18, 140);
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
           d.u += d.speed * dt * 0.018;
