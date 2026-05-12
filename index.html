@@ -826,14 +826,22 @@
           ease: 'power2.out', clearProps: 'transform' });
     });
 
-    /* ── Credentials — slide from left ── */
-    gsap.utils.toArray('.credential').forEach(function (cred, i) {
-      gsap.fromTo(cred,
-        { opacity: 0, x: -32 },
-        { scrollTrigger: { trigger: cred, start: 'top 88%', toggleActions: 'play none none none' },
-          opacity: 1, x: 0,
-          duration: 0.68, delay: i * 0.15,
-          ease: 'power2.out' });
+    /* ── Credentials — stagger reveal (suave, sem travada) ── */
+    gsap.set('.credential', { opacity: 0, y: 20 });
+    ScrollTrigger.create({
+      trigger: '.about-credentials',
+      start: 'top 85%',
+      once: true,
+      onEnter: function () {
+        gsap.to('.credential', {
+          opacity: 1,
+          y: 0,
+          duration: 0.55,
+          ease: 'power2.out',
+          stagger: 0.08,
+          clearProps: 'transform'
+        });
+      }
     });
 
     /* ── CTA glow reveal ── */
