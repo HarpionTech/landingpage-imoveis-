@@ -1,0 +1,10 @@
+# Claude Code (local settings, never publish)
+.claude/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Editores
+.vscode/
+.idea/
