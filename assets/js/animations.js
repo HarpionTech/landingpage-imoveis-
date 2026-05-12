@@ -93,7 +93,7 @@ staggerGroup('.testimonials-grid',   '.testimonial-card',  { y: 26, stagger: 0.1
   var trigger = sobreSection || parent;
   ScrollTrigger.create({
     trigger: trigger,
-    start: sobreSection ? 'top 25%' : 'top 80%',
+    start: sobreSection ? 'top 75%' : 'top 80%',
     once: true,
     onEnter: function () {
       var tl = gsap.timeline({ defaults: { duration: 0.85, ease: 'power3.out' } });

@@ -1605,9 +1605,13 @@ html.lenis body {
     border-radius: 16px;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background:
-      linear-gradient(135deg, rgba(8, 5, 2, 0.78), rgba(15, 10, 4, 0.65)),
-      url('../img/marmore_card_sobre.png') center/cover;
+    background-color: rgba(8, 5, 2, 0.55);
+    background-image:
+      linear-gradient(135deg, rgba(8, 5, 2, 0.45), rgba(15, 10, 4, 0.30)),
+      url('../img/marmore_card_sobre.png');
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
   }
 
   .about-content .section-title {
@@ -1735,9 +1739,13 @@ html.lenis body {
     padding: 20px 16px;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background:
-      linear-gradient(135deg, rgba(8, 5, 2, 0.82), rgba(15, 10, 4, 0.70)),
-      url('../img/marmore_card_sobre.png') center/cover;
+    background-color: rgba(8, 5, 2, 0.55);
+    background-image:
+      linear-gradient(135deg, rgba(8, 5, 2, 0.50), rgba(15, 10, 4, 0.32)),
+      url('../img/marmore_card_sobre.png');
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
   }
 
   .cta-card {

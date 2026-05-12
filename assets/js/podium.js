@@ -213,7 +213,7 @@ const sobreSection = document.getElementById('sobre');
 if (sobreSection && window.ScrollTrigger) {
   ScrollTrigger.create({
     trigger: sobreSection,
-    start: 'top 25%',
+    start: 'top 75%',
     once: true,
     onEnter: () => {
       if (hasAnimatedIn) return;
