@@ -599,12 +599,20 @@
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
 
-      // 3 ribbons — mesma config em todos os tamanhos (experiencia identica)
-      var BANDS = [
+      // 3 ribbons — celular tem ondas mais lineares (amplitude menor, frequencia menor)
+      // mas mesmas posicoes, fases, densidade e velocidade
+      var BANDS = isMobile ? [
+        { cy: 0.50, phase: 0.00, freq: 1.40, amp: 0.07, t1: 0.35, t2: 0.27 },
+        { cy: 0.30, phase: 1.30, freq: 1.60, amp: 0.05, t1: 0.42, t2: 0.31 },
+        { cy: 0.72, phase: 2.40, freq: 1.25, amp: 0.06, t1: 0.30, t2: 0.23 }
+      ] : [
         { cy: 0.50, phase: 0.00, freq: 2.40, amp: 0.20, t1: 0.35, t2: 0.27 },
         { cy: 0.30, phase: 1.30, freq: 2.85, amp: 0.15, t1: 0.42, t2: 0.31 },
         { cy: 0.72, phase: 2.40, freq: 2.10, amp: 0.17, t1: 0.30, t2: 0.23 }
       ];
+      // segundas harmonicas tambem mais suaves no celular
+      var SECONDARY_AMP = isMobile ? 0.025 : 0.07;
+      var TERTIARY_AMP = isMobile ? 0.018 : 0.045;
 
       function init() {
         resize();
@@ -651,8 +659,8 @@
         var phase = u * Math.PI * B.freq + time * B.t1 + B.phase;
         var y = cy
               + Math.sin(phase) * h * B.amp
-              + Math.sin(phase * 1.9 + time * B.t2) * h * 0.07
-              + Math.cos(u * Math.PI * 5.3 + time * 0.18 + B.phase) * h * 0.045;
+              + Math.sin(phase * 1.9 + time * B.t2) * h * SECONDARY_AMP
+              + Math.cos(u * Math.PI * 5.3 + time * 0.18 + B.phase) * h * TERTIARY_AMP;
         return { x: x, y: y };
       }
 
