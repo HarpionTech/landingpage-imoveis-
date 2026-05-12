@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(git rm *)",
+      "Bash(awk 'NR==568,NR==870' c:/Users/VICTOR/Desktop/heloisa-landing/index.html)",
+      "Bash(awk 'NR==865,NR==880' c:/Users/VICTOR/Desktop/heloisa-landing/index.html)",
+      "Bash(awk 'NR>=569 && NR<=869' c:/Users/VICTOR/Desktop/heloisa-landing/index.html)",
+      "Read(//tmp/**)",
+      "Bash(awk 'NR<569' c:/Users/VICTOR/Desktop/heloisa-landing/index.html)",
+      "Bash(awk 'NR>869' c:/Users/VICTOR/Desktop/heloisa-landing/index.html)",
+      "Bash(awk 'NR>868' c:/Users/VICTOR/Desktop/heloisa-landing/index.html)",
+      "Bash(git commit *)"
+    ]
+  }
+}

@@ -62,15 +62,8 @@
     </ul>
   </div>
 
-  <!-- AMBER BACKGROUND (video loop seamless crossfade) -->
-  <div class="amber-bg-wrap">
-    <video class="amber-bg amber-bg-a" autoplay loop muted playsinline preload="auto" disablepictureinpicture>
-      <source src="assets/img/elements/hailuo-2_3_Cinematic_abstract_flowing_energy_ribbon_made_of_golden_translucent_particles_an-0.mp4" type="video/mp4">
-    </video>
-    <video class="amber-bg amber-bg-b" autoplay loop muted playsinline preload="auto" disablepictureinpicture>
-      <source src="assets/img/elements/hailuo-2_3_Cinematic_abstract_flowing_energy_ribbon_made_of_golden_translucent_particles_an-0.mp4" type="video/mp4">
-    </video>
-  </div>
+  <!-- AMBER BACKGROUND (pontilhismo — ribbon dourado em pontos) -->
+  <canvas id="amberCanvas" class="amber-canvas"></canvas>
 
   <!-- HERO -->
   <section class="hero" id="hero">
@@ -574,304 +567,150 @@
 
   <script>
     /* ═══════════════════════════════════════════════════════
-       AMBER HAIR — Simulação multi-ponto com Catmull-Rom
-       Cada fio tem 7 vértices independentes. A ponta balança
-       mais que a raiz (amplitude progressiva). Spline suave.
+       AMBER POINTILLISM — Ribbon dourado em pontos
+       Milhares de partículas seguem um caminho ondulado.
+       Cada ponto tem brilho próprio + glow aditivo (lighter).
     ═══════════════════════════════════════════════════════ */
     (function () {
       var canvas = document.getElementById('amberCanvas');
       if (!canvas) return;
       var ctx = canvas.getContext('2d', { desynchronized: true, alpha: true });
-      var w, h, strands = [], dust = [];
+      var w, h, dpr;
+      var dots = [];
+      var orbs = [];
       var paused = false;
+      var t = 0;
+      var lastTs = 0;
 
       document.addEventListener('visibilitychange', function () { paused = document.hidden; });
 
       function resize() {
-        w = canvas.width  = window.innerWidth;
-        h = canvas.height = window.innerHeight;
-      }
-
-      /* ── Cria um fio com N vértices ao longo da diagonal ── */
-      /* Direção original: topo-esquerda → baixo-direita (45°)  */
-      var COS45 = Math.cos(Math.PI * 0.25);
-      var SIN45 = Math.sin(Math.PI * 0.25);
-
-      function mkStrand(idx, total) {
-        var t      = idx / (total - 1);
-        var nPts   = 7;
-        var bright = Math.random() > 0.55;
-        var pts    = [];
-
-        var diag    = Math.sqrt(w * w + h * h);
-        var spread  = diag * 1.35;
-        var perpOff = -spread * 0.15 + spread * t;
-
-        for (var p = 0; p < nPts; p++) {
-          var prog = p / (nPts - 1);
-
-          var d  = -diag * 0.18 + prog * diag * 1.38;
-          var bx = d * COS45 - perpOff * SIN45;
-          var by = d * SIN45 + perpOff * COS45;
-
-          /* Amplitude progressiva — ponta se move muito mais que a raiz */
-          var ampScale = Math.pow(prog, 1.4) + 0.06;
-
-          pts.push({
-            bx: bx, by: by,
-            /* Onda primária — movimento lento e amplo */
-            amp1:  (Math.random() * 38 + 14) * ampScale,
-            freq1: Math.random() * 0.55 + 0.25,   /* Hz — ciclos/seg */
-            ph1:   Math.random() * Math.PI * 2,
-            /* Onda secundária — tremor rápido e sutil */
-            amp2:  (Math.random() * 10 + 3) * ampScale,
-            freq2: Math.random() * 1.8  + 0.9,
-            ph2:   Math.random() * Math.PI * 2,
-            /* Defasagem entre vértices — propagação de onda pelo fio */
-            lag:   prog * (Math.random() * 0.8 + 0.3),
-          });
-        }
-
-        return {
-          pts:     pts,
-          hue:     Math.random() * 12 + 38,
-          sat:     Math.random() * 10 + 86,
-          light:   Math.random() * 10 + 56,
-          coreW:   bright ? Math.random() * 1.2 + 0.7 : Math.random() * 0.6 + 0.15,
-          glowW:   bright ? Math.random() * 22 + 12   : Math.random() * 10 + 4,
-          opacity: bright ? Math.random() * 0.42 + 0.26 : Math.random() * 0.20 + 0.08,
-          bright:  bright,
-          spd:     Math.random() * 0.6 + 0.25,   /* velocidade global do fio */
-        };
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
 
       function init() {
         resize();
-        dust = [];
-        var count = window.innerWidth < 768 ? 8 : 16;
-        strands = [];
-        for (var i = 0; i < count; i++) strands.push(mkStrand(i, count));
-      }
-
-      /* ── Resolve posição real de cada vértice ── */
-      function resolvepts(s, time) {
-        var t = time * s.spd;
-        return s.pts.map(function (p) {
-          /* Duas ondas sobrepostas perpendiculares à diagonal */
-          var w1   = Math.sin(t * p.freq1 * 6.283 + p.ph1 + p.lag) * p.amp1;
-          var w2   = Math.sin(t * p.freq2 * 6.283 + p.ph2 + p.lag * 0.5) * p.amp2;
-          var wave = w1 + w2;
-          return {
-            x: p.bx + (-SIN45) * wave,
-            y: p.by + ( COS45) * wave,
-          };
-        });
-      }
-
-      /* ── Catmull-Rom: passa suavemente por todos os pontos ── */
-      function catmullPath(pts) {
-        if (pts.length < 2) return;
-        ctx.beginPath();
-        ctx.moveTo(pts[0].x, pts[0].y);
-        for (var i = 0; i < pts.length - 1; i++) {
-          var p0 = pts[Math.max(0, i - 1)];
-          var p1 = pts[i];
-          var p2 = pts[i + 1];
-          var p3 = pts[Math.min(pts.length - 1, i + 2)];
-          var cp1x = p1.x + (p2.x - p0.x) / 6;
-          var cp1y = p1.y + (p2.y - p0.y) / 6;
-          var cp2x = p2.x - (p3.x - p1.x) / 6;
-          var cp2y = p2.y - (p3.y - p1.y) / 6;
-          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+        dots = [];
+        var area = w * h;
+        var density = window.innerWidth < 768 ? 2200 : 1300;
+        var count = Math.min(Math.floor(area / density), 1600);
+        for (var i = 0; i < count; i++) {
+          var v = (Math.random() * 2 - 1);
+          v = v * v * v; // bias toward ribbon center (cubic)
+          dots.push({
+            u: Math.random(),
+            v: v,
+            size: Math.random() * 1.7 + 0.35,
+            baseAlpha: Math.random() * 0.65 + 0.25,
+            speed: Math.random() * 0.6 + 0.4,
+            flicker: Math.random() * Math.PI * 2,
+            flickRate: Math.random() * 1.6 + 0.8,
+            hue: 36 + Math.random() * 16,
+            sat: 78 + Math.random() * 18,
+            light: 52 + Math.random() * 24,
+            bright: Math.random() < 0.12
+          });
+        }
+        orbs = [];
+        var orbCount = window.innerWidth < 768 ? 8 : 14;
+        for (var j = 0; j < orbCount; j++) {
+          orbs.push({
+            u: j / orbCount + Math.random() * 0.04,
+            radius: Math.random() * 60 + 60,
+            speed: Math.random() * 0.3 + 0.1,
+            alpha: Math.random() * 0.12 + 0.08
+          });
         }
       }
 
-      /* ── Desenha um fio em 4 camadas ── */
-      function drawStrand(s, time) {
-        var pts = resolvepts(s, time);
-        var gc  = 'hsla(' + s.hue + ',' + s.sat + '%,' + (s.light + 14) + '%,1)';
-
-        ctx.lineCap  = 'round';
-        ctx.lineJoin = 'round';
-
-        /* 1 — Halo largo difuso */
-        catmullPath(pts);
-        ctx.lineWidth   = s.glowW * 4.5;
-        ctx.strokeStyle = 'hsla(' + s.hue + ',' + s.sat + '%,' + s.light + '%,' + (s.opacity * 0.04) + ')';
-        ctx.shadowBlur  = s.glowW * 3.5;
-        ctx.shadowColor = gc;
-        ctx.stroke();
-
-        /* 2 — Brilho principal */
-        catmullPath(pts);
-        ctx.lineWidth   = s.glowW;
-        ctx.strokeStyle = 'hsla(' + s.hue + ',' + s.sat + '%,' + s.light + '%,' + (s.opacity * 0.17) + ')';
-        ctx.shadowBlur  = s.glowW * 1.2;
-        ctx.shadowColor = gc;
-        ctx.stroke();
-
-        /* 3 — Core do fio */
-        catmullPath(pts);
-        ctx.lineWidth   = s.coreW;
-        ctx.strokeStyle = 'hsla(' + s.hue + ',' + (s.sat + 6) + '%,' + Math.min(s.light + 16, 88) + '%,' + Math.min(s.opacity * 1.2, 0.88) + ')';
-        ctx.shadowBlur  = s.bright ? 5 : 9;
-        ctx.shadowColor = gc;
-        ctx.stroke();
-
-        /* 4 — Especular (fios brilhantes) */
-        if (s.bright) {
-          catmullPath(pts);
-          ctx.lineWidth   = Math.max(s.coreW * 0.22, 0.3);
-          ctx.strokeStyle = 'hsla(' + s.hue + ',72%,' + Math.min(s.light + 30, 94) + '%,' + Math.min(s.opacity * 0.52, 0.55) + ')';
-          ctx.shadowBlur  = 0;
-          ctx.shadowColor = 'transparent';
-          ctx.stroke();
-        }
-
-        ctx.shadowBlur = 0; ctx.shadowColor = 'transparent';
+      function ribbon(u, time) {
+        var x = w * 0.04 + u * w * 0.92;
+        var cy = h * 0.5;
+        var phase = u * Math.PI * 2.4 + time * 0.35;
+        var y = cy
+              + Math.sin(phase) * h * 0.20
+              + Math.sin(phase * 1.9 + time * 0.27) * h * 0.07
+              + Math.cos(u * Math.PI * 5.3 + time * 0.18) * h * 0.045;
+        return { x: x, y: y };
       }
 
-      /* ── Sistema completo de partículas: dust · spark · orb ── */
-      function mkParticle(s, pts) {
-        var pi  = Math.floor(Math.random() * pts.length);
-        var r   = Math.random();
-        var type = r < 0.30 ? 'dust' : r < 0.70 ? 'spark' : 'orb';
-        var ang  = Math.random() * Math.PI * 2;
-
-        var sizeMap = { dust: Math.random() * 1.8 + 0.4,  spark: Math.random() * 3.0 + 1.2, orb: Math.random() * 5.0 + 2.5 };
-        var opMap   = { dust: Math.random() * 0.35 + 0.10, spark: Math.random() * 0.80 + 0.45, orb: Math.random() * 0.35 + 0.15 };
-        var spMap   = { dust: Math.random() * 0.20 + 0.04, spark: Math.random() * 0.50 + 0.14, orb: Math.random() * 0.10 + 0.02 };
-        var glMap   = { dust: Math.random() * 5  + 2,      spark: Math.random() * 16 + 7,      orb: Math.random() * 40 + 20 };
-        var sp = spMap[type];
-
-        return {
-          type: type,
-          x: pts[pi].x + (Math.random() - 0.5) * 14,
-          y: pts[pi].y + (Math.random() - 0.5) * 14,
-          size: sizeMap[type], glow: glMap[type],
-          vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp - 0.06,
-          drift: Math.random() * 1.4 + 0.3,
-          driftPh: Math.random() * Math.PI * 2,
-          opacity: opMap[type],
-          fkSpeed: type === 'spark' ? Math.random() * 5 + 2 : Math.random() * 1.5 + 0.4,
-          fkPh: Math.random() * Math.PI * 2,
-          hue: s.hue + (Math.random() - 0.5) * 10,
-          sat: s.sat,
-          light: type === 'spark' ? Math.random() * 10 + 82 : Math.random() * 14 + 64,
-          life: 0,
-          maxLife: Math.random() * 900 + 300,
-          pulse: Math.random() * 1.8 + 0.7,
-          ph: Math.random() * Math.PI * 2,
-        };
-      }
-
-      function drawParticles(time) {
-        var isMob = window.innerWidth < 768;
-        var maxP  = isMob ? 22 : 50;
-
-        if (dust.length < maxP && Math.random() < 0.10) {
-          var s   = strands[Math.floor(Math.random() * strands.length)];
-          var pts = resolvepts(s, time);
-          dust.push(mkParticle(s, pts));
-        }
-
-        for (var i = dust.length - 1; i >= 0; i--) {
-          var p = dust[i];
-          p.life++;
-          p.x += p.vx + Math.sin(time * p.drift + p.driftPh) * 0.5;
-          p.y += p.vy;
-          if (p.life > p.maxLife || p.x < -40 || p.x > w + 40 || p.y < -40 || p.y > h + 40) {
-            dust.splice(i, 1); continue;
-          }
-
-          var lf   = p.life / p.maxLife;
-          var fade = lf < 0.12 ? lf / 0.12 : lf > 0.78 ? (1 - lf) / 0.22 : 1;
-          var flicker = p.type === 'spark'
-            ? 0.25 + 0.75 * Math.abs(Math.sin(time * p.fkSpeed + p.fkPh))
-            : 0.6  + 0.4  * Math.sin(time * p.fkSpeed + p.fkPh);
-          var pu   = 1 + (p.type === 'orb' ? 0.38 : 0.14) * Math.sin(time * p.pulse + p.ph);
-          var al   = p.opacity * fade * flicker;
-          var sz   = p.size * pu;
-          var r    = p.glow * pu;
-
-          var gr = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-          gr.addColorStop(0,   'hsla(' + p.hue + ',' + p.sat + '%,' + p.light + '%,' + (al * 0.70) + ')');
-          gr.addColorStop(0.4, 'hsla(' + p.hue + ',' + p.sat + '%,' + (p.light - 5) + '%,' + (al * 0.22) + ')');
-          gr.addColorStop(1,   'transparent');
-          ctx.fillStyle = gr;
-          ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
-
-          ctx.fillStyle = 'hsla(' + p.hue + ',' + (p.sat + 12) + '%,' + Math.min(p.light + 22, 96) + '%,' + Math.min(al * 1.2, 1) + ')';
-          ctx.beginPath(); ctx.arc(p.x, p.y, sz, 0, Math.PI * 2); ctx.fill();
-
-          if (p.type === 'spark') {
-            ctx.fillStyle = 'hsla(' + p.hue + ',90%,95%,' + Math.min(al * 0.7, 0.8) + ')';
-            ctx.beginPath(); ctx.arc(p.x, p.y, sz * 0.4, 0, Math.PI * 2); ctx.fill();
-          }
-        }
-      }
-
-      function draw() {
+      function draw(ts) {
         if (paused) return;
-        ctx.clearRect(0, 0, w, h);
-        var time = performance.now() * 0.001;
-        strands.forEach(function (s) { drawStrand(s, time); });
-        drawParticles(time);
+        var dt = lastTs ? Math.min((ts - lastTs) / 1000, 0.05) : 0.016;
+        lastTs = ts;
+        t += dt;
+
+        ctx.globalCompositeOperation = 'source-over';
+        var bg = ctx.createRadialGradient(w * 0.5, h * 0.55, 0, w * 0.5, h * 0.55, Math.max(w, h) * 0.75);
+        bg.addColorStop(0, '#1c0e04');
+        bg.addColorStop(0.45, '#0c0603');
+        bg.addColorStop(1, '#000000');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.globalCompositeOperation = 'lighter';
+        for (var k = 0; k < orbs.length; k++) {
+          var o = orbs[k];
+          o.u += o.speed * dt * 0.04;
+          if (o.u > 1) o.u -= 1;
+          var op = ribbon(o.u, t);
+          var rg = ctx.createRadialGradient(op.x, op.y, 0, op.x, op.y, o.radius);
+          rg.addColorStop(0, 'rgba(255, 188, 92, ' + o.alpha.toFixed(3) + ')');
+          rg.addColorStop(0.5, 'rgba(220, 140, 50, ' + (o.alpha * 0.35).toFixed(3) + ')');
+          rg.addColorStop(1, 'rgba(160, 80, 20, 0)');
+          ctx.fillStyle = rg;
+          ctx.fillRect(op.x - o.radius, op.y - o.radius, o.radius * 2, o.radius * 2);
+        }
+
+        var ribbonHalf = Math.min(h * 0.32, 240);
+        for (var i = 0; i < dots.length; i++) {
+          var d = dots[i];
+          d.u += d.speed * dt * 0.018;
+          if (d.u > 1) d.u -= 1;
+          var p = ribbon(d.u, t);
+
+          var wob = Math.sin(t * 0.7 + d.flicker) * 0.08;
+          var n = d.v + wob;
+          var y = p.y + n * ribbonHalf;
+          var falloff = Math.exp(-n * n * 1.6);
+
+          var flick = 0.65 + 0.35 * Math.sin(t * d.flickRate + d.flicker);
+          var alpha = d.baseAlpha * falloff * flick;
+          if (alpha < 0.012) continue;
+
+          var size = d.size * (0.75 + falloff * 0.55);
+
+          ctx.fillStyle = 'hsla(' + d.hue + ',' + d.sat + '%,' + d.light + '%,' + alpha.toFixed(3) + ')';
+          ctx.beginPath();
+          ctx.arc(p.x, y, size, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (d.bright && falloff > 0.45) {
+            ctx.fillStyle = 'rgba(255, 240, 200, ' + (alpha * 0.9).toFixed(3) + ')';
+            ctx.beginPath();
+            ctx.arc(p.x, y, size * 0.45, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        ctx.globalCompositeOperation = 'source-over';
       }
 
-      var resizeTimer;
+      var rT;
       window.addEventListener('resize', function () {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(init, 150);
+        clearTimeout(rT);
+        rT = setTimeout(init, 150);
       }, { passive: true });
 
       init();
-      (function loop() { draw(); requestAnimationFrame(loop); })();
-    })();
-
-    /* ── Dual-video crossfade loop (sem corte) ── */
-    (function () {
-      var vA = document.querySelector('.amber-bg-a');
-      var vB = document.querySelector('.amber-bg-b');
-      if (!vA || !vB) return;
-
-      var fadeWindow = 2.5;     // segundos da zona de crossfade (mais longo = mais suave)
-      var peakOpacity = 0.9;    // opacity max de cada video
-      var started = false;
-
-      // smoothstep ease (Ken Perlin): suaviza inicio e fim
-      function smoothstep(x) {
-        x = Math.max(0, Math.min(1, x));
-        return x * x * x * (x * (x * 6 - 15) + 10);
-      }
-
-      function start() {
-        if (started) return;
-        var dur = vA.duration;
-        if (!isFinite(dur) || dur <= 0) return;
-        started = true;
-
-        try { vB.currentTime = dur / 2; } catch (e) {}
-        vA.play().catch(function(){});
-        vB.play().catch(function(){});
-
-        function tick() {
-          var d = vA.duration;
-          if (isFinite(d) && d > 0) {
-            var tA = vA.currentTime;
-            var distA = Math.min(tA, d - tA);
-            var raw = Math.min(1, distA / fadeWindow);
-            var aA = smoothstep(raw);
-            vA.style.opacity = (aA * peakOpacity).toFixed(3);
-            vB.style.opacity = ((1 - aA) * peakOpacity).toFixed(3);
-          }
-          requestAnimationFrame(tick);
-        }
-        tick();
-      }
-
-      if (vA.readyState >= 1) start();
-      else vA.addEventListener('loadedmetadata', start);
+      (function loop(ts) { draw(ts || 0); requestAnimationFrame(loop); })();
     })();
 
     /* ══════════════════════════════════════════════════════════════
