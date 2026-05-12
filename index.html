@@ -581,18 +581,15 @@
       var paused = false;
       var t = 0;
       var lastTs = 0;
+      // detecta mobile apenas pra estabilizar altura (address bar) — NAO altera visual
       var isMobile = window.matchMedia('(max-width: 767px)').matches;
       var lastWidth = 0;
-      // celular: trava no menor entre innerHeight e screen.height (ignora ocultar/mostrar address bar)
-      var lockedHeight = isMobile ? Math.min(window.innerHeight, screen.height || window.innerHeight) : 0;
-      // throttle a ~30fps no celular para nao competir com o scroll
-      var minFrameMs = isMobile ? 33 : 0;
-      var lastDrawMs = 0;
+      var lockedHeight = isMobile ? Math.max(window.innerHeight, screen.height || window.innerHeight) : 0;
 
       document.addEventListener('visibilitychange', function () { paused = document.hidden; });
 
       function resize() {
-        dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
         w = window.innerWidth;
         h = isMobile ? lockedHeight : window.innerHeight;
         canvas.width = Math.floor(w * dpr);
@@ -602,13 +599,8 @@
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
 
-      // 3 ribbons — cada banda tem centro vertical, fase e frequência próprios
-      // mobile usa amplitudes/posicoes ajustadas para nao ficar espalhado demais
-      var BANDS = isMobile ? [
-        { cy: 0.50, phase: 0.00, freq: 1.80, amp: 0.22, t1: 0.35, t2: 0.27 },
-        { cy: 0.22, phase: 1.30, freq: 2.20, amp: 0.16, t1: 0.42, t2: 0.31 },
-        { cy: 0.78, phase: 2.40, freq: 1.55, amp: 0.18, t1: 0.30, t2: 0.23 }
-      ] : [
+      // 3 ribbons — mesma config em todos os tamanhos (experiencia identica)
+      var BANDS = [
         { cy: 0.50, phase: 0.00, freq: 2.40, amp: 0.20, t1: 0.35, t2: 0.27 },
         { cy: 0.30, phase: 1.30, freq: 2.85, amp: 0.15, t1: 0.42, t2: 0.31 },
         { cy: 0.72, phase: 2.40, freq: 2.10, amp: 0.17, t1: 0.30, t2: 0.23 }
@@ -618,8 +610,7 @@
         resize();
         dots = [];
         var area = w * h;
-        var density = window.innerWidth < 768 ? 900 : 450;
-        var perBand = Math.min(Math.floor(area / density), 4500);
+        var perBand = Math.min(Math.floor(area / 450), 4500);
         for (var b = 0; b < BANDS.length; b++) {
           for (var i = 0; i < perBand; i++) {
             var v = (Math.random() * 2 - 1);
@@ -641,7 +632,7 @@
           }
         }
         orbs = [];
-        var orbCount = window.innerWidth < 768 ? 12 : 24;
+        var orbCount = 24;
         for (var j = 0; j < orbCount; j++) {
           orbs.push({
             band: j % BANDS.length,
@@ -667,8 +658,6 @@
 
       function draw(ts) {
         if (paused) return;
-        if (minFrameMs && ts - lastDrawMs < minFrameMs) return;
-        lastDrawMs = ts;
         var dt = lastTs ? Math.min((ts - lastTs) / 1000, 0.05) : 0.016;
         lastTs = ts;
         t += dt;
@@ -691,7 +680,7 @@
           ctx.fillRect(op.x - o.radius, op.y - o.radius, o.radius * 2, o.radius * 2);
         }
 
-        var ribbonHalf = isMobile ? Math.min(h * 0.16, 110) : Math.min(h * 0.18, 140);
+        var ribbonHalf = Math.min(h * 0.18, 140);
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
           d.u += d.speed * dt * 0.018;
@@ -736,7 +725,7 @@
       }, { passive: true });
       // orientationchange recaptura altura travada
       window.addEventListener('orientationchange', function () {
-        lockedHeight = Math.min(window.innerHeight, screen.height || window.innerHeight);
+        lockedHeight = Math.max(window.innerHeight, screen.height || window.innerHeight);
         clearTimeout(rT);
         rT = setTimeout(init, 300);
       }, { passive: true });
