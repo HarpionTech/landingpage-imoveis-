@@ -581,13 +581,20 @@
       var paused = false;
       var t = 0;
       var lastTs = 0;
+      var isMobile = window.matchMedia('(max-width: 767px)').matches;
+      var lastWidth = 0;
+      // celular: trava no menor entre innerHeight e screen.height (ignora ocultar/mostrar address bar)
+      var lockedHeight = isMobile ? Math.min(window.innerHeight, screen.height || window.innerHeight) : 0;
+      // throttle a ~30fps no celular para nao competir com o scroll
+      var minFrameMs = isMobile ? 33 : 0;
+      var lastDrawMs = 0;
 
       document.addEventListener('visibilitychange', function () { paused = document.hidden; });
 
       function resize() {
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
         w = window.innerWidth;
-        h = window.innerHeight;
+        h = isMobile ? lockedHeight : window.innerHeight;
         canvas.width = Math.floor(w * dpr);
         canvas.height = Math.floor(h * dpr);
         canvas.style.width = w + 'px';
@@ -596,7 +603,12 @@
       }
 
       // 3 ribbons — cada banda tem centro vertical, fase e frequência próprios
-      var BANDS = [
+      // mobile usa amplitudes/posicoes ajustadas para nao ficar espalhado demais
+      var BANDS = isMobile ? [
+        { cy: 0.50, phase: 0.00, freq: 2.20, amp: 0.14, t1: 0.35, t2: 0.27 },
+        { cy: 0.36, phase: 1.30, freq: 2.55, amp: 0.10, t1: 0.42, t2: 0.31 },
+        { cy: 0.64, phase: 2.40, freq: 1.95, amp: 0.12, t1: 0.30, t2: 0.23 }
+      ] : [
         { cy: 0.50, phase: 0.00, freq: 2.40, amp: 0.20, t1: 0.35, t2: 0.27 },
         { cy: 0.30, phase: 1.30, freq: 2.85, amp: 0.15, t1: 0.42, t2: 0.31 },
         { cy: 0.72, phase: 2.40, freq: 2.10, amp: 0.17, t1: 0.30, t2: 0.23 }
@@ -655,16 +667,14 @@
 
       function draw(ts) {
         if (paused) return;
+        if (minFrameMs && ts - lastDrawMs < minFrameMs) return;
+        lastDrawMs = ts;
         var dt = lastTs ? Math.min((ts - lastTs) / 1000, 0.05) : 0.016;
         lastTs = ts;
         t += dt;
 
         ctx.globalCompositeOperation = 'source-over';
-        var bg = ctx.createRadialGradient(w * 0.5, h * 0.55, 0, w * 0.5, h * 0.55, Math.max(w, h) * 0.75);
-        bg.addColorStop(0, '#1c0e04');
-        bg.addColorStop(0.45, '#0c0603');
-        bg.addColorStop(1, '#000000');
-        ctx.fillStyle = bg;
+        ctx.fillStyle = '#000';
         ctx.fillRect(0, 0, w, h);
 
         ctx.globalCompositeOperation = 'lighter';
@@ -681,7 +691,7 @@
           ctx.fillRect(op.x - o.radius, op.y - o.radius, o.radius * 2, o.radius * 2);
         }
 
-        var ribbonHalf = Math.min(h * 0.18, 140);
+        var ribbonHalf = isMobile ? Math.min(h * 0.12, 90) : Math.min(h * 0.18, 140);
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
           d.u += d.speed * dt * 0.018;
@@ -716,9 +726,19 @@
       }
 
       var rT;
+      lastWidth = window.innerWidth;
       window.addEventListener('resize', function () {
+        // mobile: ignora resize disparado por toolbar do navegador (so largura conta)
+        if (isMobile && window.innerWidth === lastWidth) return;
+        lastWidth = window.innerWidth;
         clearTimeout(rT);
-        rT = setTimeout(init, 150);
+        rT = setTimeout(init, 200);
+      }, { passive: true });
+      // orientationchange recaptura altura travada
+      window.addEventListener('orientationchange', function () {
+        lockedHeight = Math.min(window.innerHeight, screen.height || window.innerHeight);
+        clearTimeout(rT);
+        rT = setTimeout(init, 300);
       }, { passive: true });
 
       init();
