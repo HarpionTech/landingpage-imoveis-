@@ -9,9 +9,9 @@ gsap.registerPlugin(ScrollTrigger);
 var lenis = new Lenis({
   lerp: 0.085,            // interpolação contínua — fluido como Igloo
   smoothWheel: true,
-  syncTouch: true,
+  syncTouch: false,       // toque mantém scroll nativo (mais responsivo no celular)
   wheelMultiplier: 1.0,
-  touchMultiplier: 1.8
+  touchMultiplier: 1.0    // velocidade natural do dedo
 });
 function lenisRaf(time) { lenis.raf(time); requestAnimationFrame(lenisRaf); }
 requestAnimationFrame(lenisRaf);
