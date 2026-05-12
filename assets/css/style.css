@@ -1740,17 +1740,13 @@ html.lenis body {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     background-color: #1a1208;
-    /* Gradient vertical: claro nas pontas (marmore visivel) + escuro no meio (legibilidade dos paragrafos) */
+    /* Veu preto moderado — mesmo estilo do desktop, levemente mais leve */
     background-image:
-      linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.62) 30%, rgba(0,0,0,0.62) 70%, rgba(0,0,0,0.15) 100%),
+      linear-gradient(135deg, rgba(8, 5, 2, 0.72), rgba(15, 10, 4, 0.58)),
       url('../img/marmore_card_sobre.png');
     background-size: cover, cover;
     background-position: center, center;
     background-repeat: no-repeat, no-repeat;
-  }
-
-  .about-text {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   }
 
   .cta-card {
